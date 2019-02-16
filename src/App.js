@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
+import { Chat } from './screens'
+
+
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <p>
-          Keep Calm and Carry On.
-        </p>
+      <div className="App" style={{ height: '100%' }}>
+        <Chat />
       </div>
     );
   }
