@@ -2,7 +2,9 @@
   "name": "chekhov",
   "version": "0.1.0",
   "private": true,
+  "author": "Donghee Kim <kimdhoe1@gmail.com>",
   "dependencies": {
+    "normalize.css": "^8.0.1",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "react-scripts": "2.1.5"
