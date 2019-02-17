@@ -1,50 +1,90 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import * as styles from './index.module.css'
 
 class Entrance extends React.Component {
-  state = {
-    error: 'Something went wrong',
+  static propTypes = {
+    socket: PropTypes.object.isRequired,
   }
 
-  render () {
-    const { error } = this.state
+  state = {
+    input: '',
+    message: '',
+  }
+
+  componentDidMount () {
+    console.log(this.props.socket)
+  }
+
+  handleChangeInput = e => {
+    this.setState({
+      input: e.target.value,
+      message: '',
+    })
+  }
+
+  handleSubmit = e => {
+    e.preventDefault()
+
+    // userID :: string
+    const userID = this.state.input.trim()
+
+    if (!userID) return
+
+    this.props.socket.emit(
+      'register',
+      userID,
+      // boolean * string? -> void
+      ({ ok, message }) => {
+        if (!ok) {
+          this.setState({ message })
+        } else {
+          this.props.onRegister(userID)
+        }
+      })
+  }
+
+  render() {
+    const { input, message } = this.state
 
     return (
       <div className={styles.container}>
         <header className={styles.header}>
-          <h1 className={styles.h1}>Kakao Chat</h1>
+          <h1 className={styles.h1}>
+            Kakao Chat
+          </h1>
         </header>
 
         <div className={styles.top}>
           <h2 className={styles.subtitle}>
-            <span>Have a</span>{' '}
-            <span className={styles.highlighted}>Nice Chat</span>
+            Have a <span className={styles.highlighted}>Nice Chat</span>
           </h2>
-          <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium id porro optio!
+          <p className={styles.description}>
+            The most advanced and beautiful chat application in the universe.
+            Everyone should be using this. Choose your name and start chatting now.
           </p>
         </div>
 
-        <div className={styles.bottom}>
+        <form className={styles.bottom} onSubmit={this.handleSubmit}>
           <div className={styles.inputContainer}>
             <input
               className={styles.input}
               type="text"
               placeholder="User ID"
+              value={input}
+              onChange={this.handleChangeInput}
             />
           </div>
 
           <p className={styles.error}>
-            {error}
+            {message}
           </p>
 
-          <button
-            className={styles.button}
-          >
+          <button type="submit" className={styles.button}>
             Connect
           </button>
-        </div>
+        </form>
       </div>
     )
   }

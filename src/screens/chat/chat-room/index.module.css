@@ -1,0 +1,96 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+}
+
+.titleText {
+  margin: 0;
+  padding: 15px 0;
+  border-bottom: 1px solid #dee2e6;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 400;
+  color: #495057;
+}
+
+.messagesContainer {
+  flex: 1;
+  overflow: scroll;
+}
+
+.editor {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.editorLeft {
+  padding-right: 10px;
+}
+
+.editorRight {
+  display: flex;
+  padding: 5px 5px 5px 0;
+  flex: 1;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+}
+
+.sendImageButton {
+  outline: none;
+  border: none;
+  border-radius: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: blue;
+  color: white;
+}
+
+.input {
+  flex: 1;
+  outline: none;
+  padding: 0 10px;
+  border: none;
+  border-radius: 12px;
+}
+
+.sendButton {
+  outline: none;
+  border: none;
+  border-radius: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: green;
+  color: white;
+}
+
+.message {
+  margin: 10px 0 20px 10px;
+}
+
+.myMessage {
+  margin: 10px 10px 20px 0;
+  text-align: right;
+}
+
+.messageSender {
+  margin: 0 0 5px 5px;
+  font-size: 14px;
+  color: #868e96;
+}
+
+.messageText {
+  display: inline-block;
+  margin: 0;
+  padding: 9px 15px;
+  border-radius: 17px;
+  max-width: 200px;
+  background-color: #e9ecef;
+}
+
+.myMessage .messageText {
+  background-color: #1c7ed6;
+  color: white;
+}
