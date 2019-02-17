@@ -2,24 +2,22 @@
 }
 
 .header {
-  margin-bottom: 15px;
-  padding: 30px 15px 50px;
-  background-color: #27479A;
+  padding: 20px 15px 40px;
 }
 
 .h2 {
+  margin-bottom: 10px;
   margin-left: auto;
   margin-right: auto;
   max-width: 720px;
-  font-size: 25px;
-  color: rgba(255, 255, 255, 0.2);
+  font-size: 30px;
 }
 
 .headerText {
   margin: 0 auto;
   max-width: 720px;
   font-size: 15px;
-  color: white;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .rooms {

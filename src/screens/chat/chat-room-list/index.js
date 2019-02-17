@@ -47,7 +47,7 @@ class ChatRoomList extends React.Component {
   renderHeader = () => (
     <header className={styles.header}>
       <h2 className={styles.h2}>
-        Cosmic Chat System
+        Join Chat Room
       </h2>
 
       <p className={styles.headerText}>
