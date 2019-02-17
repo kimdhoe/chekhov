@@ -113,33 +113,37 @@ class ChatRoom extends React.Component {
 
     return (
       <div className={styles.container}>
-        <header
+        <div
+          className={styles.headerContainer}
           style={{ backgroundColor: room.color }}
-          className={styles.header}
         >
-          <button
-            className={styles.backButton}
-            onClick={onPressBack}
-          >
-            <ArrowBackIcon />
-          </button>
+          <header className={styles.header}>
+            <button
+              className={styles.backButton}
+              onClick={onPressBack}
+            >
+              <ArrowBackIcon />
+            </button>
 
-          <h2 className={styles.titleText}>
-            {room.title}
-          </h2>
-        </header>
+            <h2 className={styles.titleText}>
+              {room.title}
+            </h2>
+          </header>
+        </div>
 
         <div
           ref={this.scrollContainer}
           className={styles.messagesContainer}
         >
-          {messages.map((message, i) => (
-            <Message
-              key={i}
-              message={message}
-              mine={message.sender === userID}
-            />
-          ))}
+          <div className={styles.messagesWrapper}>
+            {messages.map((message, i) => (
+              <Message
+                key={i}
+                message={message}
+                mine={message.sender === userID}
+              />
+            ))}
+          </div>
         </div>
 
         <div className={styles.editor}>
