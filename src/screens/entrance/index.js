@@ -50,41 +50,43 @@ class Entrance extends React.Component {
 
     return (
       <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.h1}>
-            Kakao Chat
+        <div className={styles.wrapper}>
+          <header className={styles.header}>
+            <h1 className={styles.h1}>
+              Kakao Chat
           </h1>
-        </header>
+          </header>
 
-        <div className={styles.top}>
-          <h2 className={styles.subtitle}>
-            Have a <span className={styles.highlighted}>Nice Chat</span>
-          </h2>
-          <p className={styles.description}>
-            The most advanced and beautiful chat application in the universe.
-            Everybody should be using this. Choose your name and start chatting now.
+          <div className={styles.top}>
+            <h2 className={styles.subtitle}>
+              Have a <span className={styles.highlighted}>Nice Chat</span>
+            </h2>
+            <p className={styles.description}>
+              The most advanced and beautiful chat application in the universe.
+              Everybody should be using this. Choose your name and start chatting now.
           </p>
-        </div>
-
-        <form className={styles.bottom} onSubmit={this.handleSubmit}>
-          <div className={styles.inputContainer}>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="User ID"
-              value={input}
-              onChange={this.handleChangeInput}
-            />
           </div>
 
-          <p className={styles.error}>
-            {message}
-          </p>
+          <form className={styles.bottom} onSubmit={this.handleSubmit}>
+            <div className={styles.inputContainer}>
+              <input
+                className={styles.input}
+                type="text"
+                placeholder="User ID"
+                value={input}
+                onChange={this.handleChangeInput}
+              />
+            </div>
 
-          <button type="submit" className={styles.button}>
-            Connect
+            <p className={styles.error}>
+              {message}
+            </p>
+
+            <button type="submit" className={styles.button}>
+              Connect
           </button>
-        </form>
+          </form>
+        </div>
       </div>
     )
   }

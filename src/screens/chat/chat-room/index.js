@@ -13,7 +13,7 @@ const ME = 'Kiwi'
 // Data Definitions
 // -------------------------------------
 
-// A ChatState is an object: { messages: Message[] }
+// A ChatRoomState is an object: { messages: Message[] }
 
 // A Message is an object: { sender: string
 //                         , text:   string
@@ -24,16 +24,21 @@ const ME = 'Kiwi'
 // Component
 // -------------------------------------
 
-class Chat extends React.Component {
+class ChatRoom extends React.Component {
   static propTypes = {
     userID: PropTypes.string.isRequired,
+    room: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+    }),
     socket: PropTypes.object.isRequired,
     onPressBack: PropTypes.func.isRequired,
   }
 
   scrollContainer = React.createRef()
 
-  // state :: ChatState
+  // state :: ChatRoomstate
   state = {
     messages: [
       { sender: 'Summer', text: 'hello world' },
@@ -108,7 +113,10 @@ class Chat extends React.Component {
 
     return (
       <div className={styles.container}>
-        <header className={styles.header}>
+        <header
+          style={{ backgroundColor: room.color }}
+          className={styles.header}
+        >
           <button
             className={styles.backButton}
             onClick={onPressBack}
@@ -184,4 +192,4 @@ Message.propTypes = {
   mine: PropTypes.bool.isRequired,
 }
 
-export default Chat
+export default ChatRoom

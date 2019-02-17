@@ -19,17 +19,17 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
+  color: white;
 }
 
 .titleText {
   flex: 1;
   margin: 0;
   padding: 15px 0;
-  border-bottom: 1px solid #dee2e6;
   text-align: center;
   font-size: 15px;
   font-weight: 400;
-  color: #495057;
+  color: white;
 }
 
 .messagesContainer {
@@ -49,7 +49,7 @@
 
 .editorRight {
   display: flex;
-  padding: 5px 5px 5px 0;
+  padding: 5px 11px 5px 0;
   flex: 1;
   border: 1px solid #adb5bd;
   border-radius: 20px;
