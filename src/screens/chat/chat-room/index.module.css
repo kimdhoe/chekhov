@@ -116,8 +116,10 @@
   display: inline-block;
   margin: 0;
   padding: 9px 15px;
-  border-radius: 17px;
   max-width: 200px;
+  border-radius: 17px;
+  line-height: 1.4;
+  text-align: left;
   background-color: #e9ecef;
 }
 
