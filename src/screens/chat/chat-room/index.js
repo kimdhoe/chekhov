@@ -6,9 +6,6 @@ import ArrowBackIcon from './arrow-back-icon'
 import ImageIcon from './image-icon'
 import SendIcon from './send-icon'
 
-// TODO:
-const ME = 'Kiwi'
-
 // -------------------------------------
 // Data Definitions
 // -------------------------------------
@@ -160,6 +157,7 @@ class ChatRoom extends React.Component {
           <form className={styles.editorRight} onSubmit={this.handleSubmit}>
             <input
               className={styles.input}
+              autoFocus
               name="message"
               type="text"
               placeholder="Type message here"
