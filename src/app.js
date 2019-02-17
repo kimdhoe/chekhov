@@ -51,13 +51,16 @@ class App extends React.Component {
     return (
       <div className="App" style={{ height: '100%' }}>
         {userID ? (
-          <Chat socket={socket} />
-        ) : (
-          <Entrance
+          <Chat
             socket={socket}
-            onRegister={this.handleRegister}
+            userID={userID}
           />
-        )}
+        ) : (
+            <Entrance
+              socket={socket}
+              onRegister={this.handleRegister}
+            />
+          )}
       </div>
     );
   }

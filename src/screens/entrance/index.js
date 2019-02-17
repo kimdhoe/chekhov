@@ -62,7 +62,7 @@ class Entrance extends React.Component {
           </h2>
           <p className={styles.description}>
             The most advanced and beautiful chat application in the universe.
-            Everyone should be using this. Choose your name and start chatting now.
+            Everybody should be using this. Choose your name and start chatting now.
           </p>
         </div>
 

@@ -5,7 +5,24 @@
   height: 100%;
 }
 
+.header {
+  position: relative;
+}
+
+.backButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
 .titleText {
+  flex: 1;
   margin: 0;
   padding: 15px 0;
   border-bottom: 1px solid #dee2e6;
@@ -34,18 +51,18 @@
   display: flex;
   padding: 5px 5px 5px 0;
   flex: 1;
-  border: 1px solid #ced4da;
+  border: 1px solid #adb5bd;
   border-radius: 20px;
 }
 
 .sendImageButton {
+  padding: 0;
   outline: none;
   border: none;
-  border-radius: 12px;
   width: 24px;
   height: 24px;
-  background-color: blue;
-  color: white;
+  background-color: transparent;
+  color: #495057;
 }
 
 .input {
@@ -56,14 +73,18 @@
   border-radius: 12px;
 }
 
+.input::placeholder {
+  color: #adb5bd;
+}
+
 .sendButton {
+  padding: 0;
   outline: none;
   border: none;
-  border-radius: 12px;
   width: 24px;
   height: 24px;
-  background-color: green;
-  color: white;
+  background-color: transparent;
+  color: #868e96;
 }
 
 .message {

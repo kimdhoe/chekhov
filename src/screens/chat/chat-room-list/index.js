@@ -41,7 +41,7 @@ class ChatRoomList extends React.Component {
 
   // handleRoomClick :: ChatRoom -> void
   handleRoomClick = room => {
-    console.log(room)
+    this.props.onPressRoom(room)
   }
 
   renderHeader = () => (
