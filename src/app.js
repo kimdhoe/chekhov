@@ -51,7 +51,7 @@ class App extends React.Component {
     return (
       <div className="App" style={{ height: '100%' }}>
         {userID ? (
-          <Chat />
+          <Chat socket={socket} />
         ) : (
           <Entrance
             socket={socket}

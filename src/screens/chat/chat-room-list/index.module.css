@@ -1,0 +1,41 @@
+.container {
+}
+
+.header {
+  margin-bottom: 15px;
+  padding: 30px 15px 50px;
+  background-color: #27479A;
+}
+
+.h2 {
+  font-size: 25px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.headerText {
+  margin: 0;
+  font-size: 15px;
+  color: white;
+}
+
+.rooms {
+  margin: 0 15px;
+}
+
+.room {
+  display: block;
+  margin-bottom: 10px;
+  padding: 40px 0;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 21px;
+  color: white;
+  cursor: pointer;
+}
+
+.room:hover {
+  opacity: 0.9;
+}
