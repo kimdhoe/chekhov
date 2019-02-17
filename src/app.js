@@ -7,12 +7,6 @@ import {
 } from './screens'
 
 // -------------------------------------
-// Constants
-// -------------------------------------
-
-const ENDPOINT = 'http://localhost:3001'
-
-// -------------------------------------
 // Data Definitions
 // -------------------------------------
 
@@ -33,17 +27,19 @@ class App extends React.Component {
     userID: null,
   }
 
-  componentDidMount () {
-    const socket = io(ENDPOINT)
+  componentDidMount() {
+    // socket :: Socket
+    const socket = io(process.env.REACT_APP_ENDPOINT)
 
     this.setState({ socket })
   }
 
+  // handleRegister :: string -> void
   handleRegister = userID => {
     this.setState({ userID })
   }
 
-  render () {
+  render() {
     const { socket, userID } = this.state
 
     if (!socket) return null
