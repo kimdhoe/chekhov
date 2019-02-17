@@ -13,10 +13,6 @@ class Entrance extends React.Component {
     message: '',
   }
 
-  componentDidMount () {
-    console.log(this.props.socket)
-  }
-
   handleChangeInput = e => {
     this.setState({
       input: e.target.value,

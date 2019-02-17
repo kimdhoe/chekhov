@@ -1,3 +1,8 @@
+// TODO:
+//   * socket controller
+//   * user service
+//   * room service
+
 const http = require('http')
 const express = require('express')
 const socketIO = require('socket.io')
@@ -11,6 +16,16 @@ const User = require('./User')
 // PORT :: number
 const PORT = 3001
 
+// ROOMS :: ChatRoom[]
+const ROOMS = [
+  { id: 'a', title: 'Moon',    color: '#3E93A7' },
+  { id: 'b', title: 'Mercury', color: '#27479A' },
+  { id: 'c', title: 'Mars',    color: '#FAC167' },
+  { id: 'd', title: 'Earth',   color: '#EB7D9A' },
+  { id: 'e', title: 'Pluto',   color: '#1EA368' },
+  { id: 'f', title: 'Uranus',  color: '#9CA4BF' },
+]
+
 // -------------------------------------
 // Main
 // -------------------------------------
@@ -23,11 +38,7 @@ const server = http.createServer(app)
 const io = socketIO(server)
 
 io.on('connection', socket => {
-  console.log('=> A user has been connected.')
-
-  socket.on('disconnect', () => {
-    console.log('=> A user has been disconnected.')
-  })
+  socket.on('disconnect', () => {})
 
   socket.on('register', (userID, fn) => {
     try {
@@ -42,21 +53,27 @@ io.on('connection', socket => {
   })
 
   socket.on('list', fn => {
-    fn({
-      ok: true,
-      rooms: [
-        { id: 'a', title: 'Moon', color: '#3E93A7 ' },
-        { id: 'b', title: 'Mercury', color: '#27479A' },
-        { id: 'c', title: 'Mars', color: '#FAC167' },
-        { id: 'd', title: 'Earth', color: '#EB7D9A' },
-        { id: 'e', title: 'Pluto', color: '#1EA368' },
-        { id: 'f', title: 'Uranus', color: '#9CA4BF' },
-      ]
+    fn({ ok: true, rooms: ROOMS })
+  })
+
+  socket.on('join', ({ room, userID }) => {
+    socket.join(room.id)
+    io.to(room.id).emit('message', {
+      type: 'announcement',
+      text: `${userID} joined ${room.title}.`,
+    })
+  })
+
+  socket.on('leave', ({ room, userID }) => {
+    socket.leave(room.id)
+    io.to(room.id).emit('message', {
+      type: 'announcement',
+      text: `${userID} left ${room.title}.`,
     })
   })
 
   socket.on('message', message => {
-    console.log(message)
+    socket.broadcast.to(message.room).emit('message', message)
   })
 })
 

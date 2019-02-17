@@ -97,6 +97,12 @@
   color: #868e96;
 }
 
+.announcement {
+  font-size: 14px;
+  text-align: center;
+  color: #868e96;
+}
+
 .message {
   margin: 10px 0 20px 10px;
 }

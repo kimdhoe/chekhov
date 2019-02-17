@@ -15,9 +15,10 @@ const ME = 'Kiwi'
 
 // A ChatRoomState is an object: { messages: Message[] }
 
-// A Message is an object: { sender: string
+// A Message is an object: { sender: string?
+//                         , type:   'announcement' | 'default'
 //                         , text:   string
-//                         , error:  string
+//                         , error:  string?
 //                         }
 
 // -------------------------------------
@@ -40,40 +41,35 @@ class ChatRoom extends React.Component {
 
   // state :: ChatRoomstate
   state = {
-    messages: [
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: ME, text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-      { sender: 'Summer', text: 'hello world' },
-    ],
+    messages: [],
   }
 
   componentDidMount() {
     // Show the latest messages to user.
     this.scrollToBottom(false)
+
+    const { socket, room, userID } = this.props
+
+    socket.on('message', message => {
+      this.setState(
+        ({ messages }) => ({ messages: [...messages, message ] }),
+        () => {
+          this.scrollToBottom()
+          // TODO: focus
+        }
+      )
+    })
+
+    socket.emit('join', { room, userID })
+  }
+
+  componentWillUnmount() {
+    const { props } = this
+
+    this.props.socket.emit('leave', {
+      room: props.room,
+      userID: props.userID,
+    })
   }
 
   // scrollToBottom :: boolean -> void
@@ -96,12 +92,17 @@ class ChatRoom extends React.Component {
 
     if (!text.trim()) return
 
+    const message = {
+      type: 'default',
+      sender: this.props.userID,
+      text: inputNode.value,
+      room: this.props.room.id,
+    }
+
     this.setState(({ messages }) => ({
-      messages: [
-        ...messages,
-        { sender: this.props.userID, text: inputNode.value },
-      ],
+      messages: [ ...messages, message ],
     }), () => {
+      this.props.socket.emit('message', message)
       inputNode.value = ''
       this.scrollToBottom()
     })
@@ -173,23 +174,33 @@ class ChatRoom extends React.Component {
   }
 }
 
-const Message = ({ message, mine = false }) => (
-  <div
-    className={[
-      styles.message,
-      mine && styles.myMessage
-    ].join(' ')}
-  >
-    {!mine && (
-      <p className={styles.messageSender}>
-        {message.sender}
+const Message = ({ message, mine = false }) => {
+  if (message.type === 'announcement') {
+    return (
+      <p className={styles.announcement}>
+        {message.text}
       </p>
-    )}
-    <p className={styles.messageText}>
-      {message.text}
-    </p>
-  </div>
-)
+    )
+  }
+
+  return (
+    <div
+      className={[
+        styles.message,
+        mine && styles.myMessage
+      ].join(' ')}
+    >
+      {!mine && (
+        <p className={styles.messageSender}>
+          {message.sender}
+        </p>
+      )}
+      <p className={styles.messageText}>
+        {message.text}
+      </p>
+    </div>
+  )
+}
 
 Message.propTypes = {
   message: PropTypes.object.isRequired,
