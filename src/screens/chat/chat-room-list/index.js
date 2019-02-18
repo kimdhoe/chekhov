@@ -20,6 +20,11 @@ import * as styles from './index.module.css'
 // -------------------------------------
 
 class ChatRoomList extends React.Component {
+  static propTypes = {
+    socket: PropTypes.object,
+    onPressRoom: PropTypes.func.isRequired,
+  }
+
   state = {
     rooms: [],
     error: '',
