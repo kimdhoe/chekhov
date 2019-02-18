@@ -49,12 +49,15 @@ class ChatRoom extends React.Component {
 
     socket.on('message', message => {
       this.setState(
-        ({ messages }) => ({ messages: [...messages, message ] }),
-        () => {
-          this.scrollToBottom()
-          // TODO: focus
-        }
+        state => ({ messages: [...state.messages, message ] }),
+        this.scrollToBottom,
       )
+    })
+
+    // Re-join room when socket reconnects.
+    //   * This happens when server restarts.
+    socket.on('connect', () => {
+      socket.emit('join', { room, userID })
     })
 
     socket.emit('join', { room, userID })
