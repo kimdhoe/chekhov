@@ -1,18 +1,56 @@
+// -------------------------------------
+// State
+// -------------------------------------
+
 // userTable :: { [string]: boolean }
-// Keeps track of registered users.
-// Interpretation.
+// state. Keeps track of registered users.
+// interpretation.
 //   - key - User ID.
 //   - value - Is this ID being used?
-const userTable = {}
+let _userTable = {}
 
+// -------------------------------------
+// Functions
+// -------------------------------------
+
+// register :: string -> void
+// Adds a give user-id to _userTable.
 function register(userID) {
-  if (userTable[userID]) {
+  if (isRegistered(userID)) {
     throw new Error(`Someone already took the ID "${userID}".`)
   }
 
-  userTable[userID] = true
+  _userTable[userID] = true
+}
+
+// deregister :: string -> void
+// effect. Deletes a given user-id from _userTable.
+function deregister(userID) {
+  delete _userTable[userID]
+}
+
+// isRegistered :: string -> boolean
+// effect. Is a given user-id exist on _userTable?
+function isRegistered(userID) {
+  return !!_userTable[userID]
+}
+
+// count :: -> void
+// effect. Returns the number of users registered.
+function count() {
+  return Object.keys(_userTable).length
+}
+
+// clear :: -> void
+// effect. Empties _userTable.
+function clear() {
+  _userTable = {}
 }
 
 module.exports = {
   register,
+  deregister,
+  isRegistered,
+  count,
+  clear,
 }

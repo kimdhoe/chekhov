@@ -44,7 +44,7 @@ io.on('connection', socket => {
   })
 
   socket.on('list', fn => {
-    fn({ ok: true, rooms: Room.CHAT_ROOMS })
+    fn({ ok: true, rooms: Room.ROOMS })
   })
 
   socket.on('join', ({ room, userID }) => {
