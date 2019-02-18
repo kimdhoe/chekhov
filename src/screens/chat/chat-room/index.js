@@ -41,9 +41,6 @@ class ChatRoom extends React.Component {
   }
 
   componentDidMount() {
-    // Show the latest messages to user.
-    this.scrollToBottom(false)
-
     const { socket, room, userID } = this.props
 
     socket.on('message', message => {
@@ -118,6 +115,7 @@ class ChatRoom extends React.Component {
     }), () => {
       props.socket.emit('message', message)
       inputNode.value = ''
+      inputNode.blur()
       this.scrollToBottom()
     })
   }
@@ -220,7 +218,7 @@ class ChatRoom extends React.Component {
             <div className={styles.field}>
               <input
                 className={styles.input}
-                autoFocus
+                // autoFocus
                 autoComplete="off"
                 name="message"
                 type="text"

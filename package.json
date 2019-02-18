@@ -16,6 +16,7 @@
     "dev-server": "nodemon server",
     "start": "REACT_APP_ENDPOINT=http://localhost:3001 react-scripts start",
     "build": "REACT_APP_ENDPOINT=http://localhost:3001 react-scripts build",
+    "build:deploy": "REACT_APP_ENDPOINT=https://chekhov-app.herokuapp.com react-scripts build",
     "test": "react-scripts test",
     "test:server": "./node_modules/jest/bin/jest.js server/ --verbose",
     "eject": "react-scripts eject"
@@ -31,5 +32,8 @@
   ],
   "devDependencies": {
     "nodemon": "^1.18.10"
+  },
+  "engines": {
+    "node": ">=11.8"
   }
 }

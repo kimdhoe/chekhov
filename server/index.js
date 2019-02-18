@@ -13,7 +13,7 @@ const Room = require('./Room')
 // -------------------------------------
 
 // PORT :: number
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 // -------------------------------------
 // Main
@@ -101,6 +101,7 @@ io.on('connection', socket => {
 
 server.listen(PORT, err => {
   if (err) {
+    console.log('ERROR', err.message)
     throw err
   }
 
