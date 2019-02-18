@@ -9,11 +9,17 @@
 //                          }
 //   * participants - IDs of current participants.
 
-// A Message is an object: { sender: string?
-//                         , type:   'announcement' | 'default'
-//                         , text:   string
-//                         , error:  string?
+// A Message is an object: { sender:          string?
+//                         , type:            'announcement' | 'default'
+//                         , text:            string
+//                         , error:           string?
+//                         , image:           string?
+//                         , imageDimensions: Dimensions?
 //                         }
+
+// A Dimensions is an object: { width:  number
+//                            , height: number
+//                            }
 
 // A RegisterResponse is an object: { ok:       boolean
 //                                  , message:  string?

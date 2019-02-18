@@ -10,7 +10,10 @@ import SendIcon from './send-icon'
 // Data Definitions
 // -------------------------------------
 
-// A ChatRoomState is an object: { messages: Message[] }
+// A ChatRoomState is an object: { messages:        Message[]
+//                               , image:           string?,
+//                               , imageDimensions: Dimensions?
+//                               }
 
 // -------------------------------------
 // Component
@@ -33,6 +36,8 @@ class ChatRoom extends React.Component {
   // state :: ChatRoomState
   state = {
     messages: [],
+    image: null,
+    imageDimensions: null,
   }
 
   componentDidMount() {
@@ -43,7 +48,7 @@ class ChatRoom extends React.Component {
 
     socket.on('message', message => {
       this.setState(
-        state => ({ messages: [...state.messages, message ] }),
+        state => ({ messages: [...state.messages, message] }),
         this.scrollToBottom,
       )
     })
@@ -72,7 +77,7 @@ class ChatRoom extends React.Component {
       userID: props.userID,
     }
 
-    this.props.socket.emit('leave', leaveRequest)
+    props.socket.emit('leave', leaveRequest)
   }
 
   // scrollToBottom :: boolean -> void
@@ -92,22 +97,59 @@ class ChatRoom extends React.Component {
 
     const inputNode = e.target.message
     const text = inputNode.value
+    const { props, state } = this
 
-    if (!text.trim()) return
+    if (!text.trim() && !state.image) return
 
+    // message :: Message
     const message = {
       type: 'default',
-      sender: this.props.userID,
+      sender: props.userID,
       text: inputNode.value,
-      room: this.props.room.id,
+      room: props.room.id,
+      image: state.image,
+      imageDimensions: state.imageDimensions,
     }
 
     this.setState(({ messages }) => ({
       messages: [...messages, message],
+      image: null,
+      imageDimensions: null,
     }), () => {
-      this.props.socket.emit('message', message)
+      props.socket.emit('message', message)
       inputNode.value = ''
       this.scrollToBottom()
+    })
+  }
+
+  getImageData = file => {
+    return new Promise(resolve => {
+      const reader = new FileReader()
+      reader.onload = e => {
+        const img = new Image()
+        img.onload = () => {
+          resolve({
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+            data: reader.result,
+          })
+        }
+        img.src = reader.result
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  handleFileChange = async e => {
+    const [file] = e.target.files
+
+    if (!file) return
+
+    const imageData = await this.getImageData(file)
+
+    this.setState({
+      image: imageData.data,
+      imageDimensions: { width: imageData.width, height: imageData.height },
     })
   }
 
@@ -152,25 +194,42 @@ class ChatRoom extends React.Component {
 
         <div className={styles.editor}>
           <div className={styles.editorLeft}>
-            <button
+            <label
               className={styles.sendImageButton}
-              type="button"
+              htmlFor="file"
             >
+              <input
+                className={styles.file}
+                id="file"
+                type="file"
+                accept="image/jpeg,image/png"
+                onChange={this.handleFileChange}
+              />
               <ImageIcon />
-            </button>
+            </label>
           </div>
 
           <form className={styles.editorRight} onSubmit={this.handleSubmit}>
-            <input
-              className={styles.input}
-              autoFocus
-              name="message"
-              type="text"
-              placeholder="Type message here"
-            />
-            <button className={styles.sendButton} type="submit">
-              <SendIcon />
-            </button>
+            {this.state.image && (
+              <img
+                alt=""
+                className={styles.imagePreview}
+                src={this.state.image}
+              />
+            )}
+            <div className={styles.field}>
+              <input
+                className={styles.input}
+                autoFocus
+                autoComplete="off"
+                name="message"
+                type="text"
+                placeholder="Type here"
+              />
+              <button className={styles.sendButton} type="submit">
+                <SendIcon />
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -199,9 +258,20 @@ const Message = ({ message, mine = false }) => {
           {message.sender}
         </p>
       )}
-      <p className={styles.messageText}>
-        {message.text}
-      </p>
+      {!!message.image && (
+        <p className={styles.attachment}>
+          <img
+            className={styles.messageImage}
+            src={message.image}
+            alt=""
+          />
+        </p>
+      )}
+      {message.text && (
+        <p className={styles.messageText}>
+          {message.text}
+        </p>
+      )}
     </div>
   )
 }

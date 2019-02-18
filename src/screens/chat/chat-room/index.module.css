@@ -29,8 +29,7 @@
   margin: 0;
   padding: 15px 0;
   text-align: center;
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 15px; font-weight: 400;
   color: white;
 }
 
@@ -50,22 +49,29 @@
   max-width: 720px;
   width: 85%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .editorLeft {
   padding-right: 10px;
+  padding-bottom: 6px;
 }
 
 .editorRight {
-  display: flex;
-  padding: 5px 11px 5px 0;
-  flex: 1;
+  width: 100%;
+  flex-direction: column;
   border: 1px solid #adb5bd;
   border-radius: 20px;
 }
 
+.field {
+  display: flex;
+  padding: 5px 11px 5px 0;
+  flex: 1;
+}
+
 .sendImageButton {
+  display: block;
   padding: 0;
   outline: none;
   border: none;
@@ -73,6 +79,18 @@
   height: 24px;
   background-color: transparent;
   color: #495057;
+}
+
+.file {
+  display: none;
+}
+
+.imagePreview {
+  margin-top: 10px;
+  margin-left: 10px;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 12px;
 }
 
 .input {
@@ -132,4 +150,14 @@
 .myMessage .messageText {
   background-color: #1c7ed6;
   color: white;
+}
+
+.attachment {
+  margin: 0;
+}
+
+.messageImage {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 13px;
 }
