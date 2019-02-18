@@ -13,8 +13,14 @@ let _userTable = {}
 // Functions
 // -------------------------------------
 
+// getAll :: -> string[]
+// effect. returns an array of all user IDs.
+function getAll() {
+  return Object.keys(_userTable)
+}
+
 // register :: string -> void
-// Adds a give user-id to _userTable.
+// effect. Adds a give user-id to _userTable.
 function register(userID) {
   if (isRegistered(userID)) {
     throw new Error(`Someone already took the ID "${userID}".`)
@@ -48,6 +54,7 @@ function clear() {
 }
 
 module.exports = {
+  getAll,
   register,
   deregister,
   isRegistered,

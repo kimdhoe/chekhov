@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import * as styles from './index.module.css'
 import ArrowBackIcon from './arrow-back-icon'
+import PlusIcon from './plus-icon'
 import ImageIcon from './image-icon'
 import SendIcon from './send-icon'
 
@@ -151,6 +152,14 @@ class ChatRoom extends React.Component {
     })
   }
 
+  handleInvitePress = () => {
+    console.log('invite')
+
+    this.props.socket.emit('user list', users => {
+      console.log('Users', users)
+    })
+  }
+
   render() {
     const { userID, room, onPressBack } = this.props
     const { messages } = this.state
@@ -172,6 +181,13 @@ class ChatRoom extends React.Component {
             <h2 className={styles.titleText}>
               {room.title}
             </h2>
+
+            <button
+              className={styles.inviteButton}
+              onClick={this.handleInvitePress}
+            >
+              <PlusIcon />
+            </button>
           </header>
         </div>
 

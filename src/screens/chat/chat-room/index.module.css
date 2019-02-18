@@ -24,6 +24,19 @@
   color: white;
 }
 
+.inviteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: white;
+}
+
 .titleText {
   flex: 1;
   margin: 0;

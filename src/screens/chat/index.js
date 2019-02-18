@@ -20,6 +20,16 @@ class Chat extends React.Component {
     room: null,
   }
 
+  componentDidMount() {
+    const { socket, userID } = this.props
+
+    // Re-registers user when socket reconnects.
+    //   * This happens when server restarts.
+    socket.on('connect', () => {
+      socket.emit('register', userID, () => {})
+    })
+  }
+
   // handleRoomPress :: Room -> void
   handleRoomPress = room => {
     this.setState({ room })

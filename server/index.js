@@ -97,6 +97,8 @@ io.on('connection', socket => {
       socket.broadcast.to(message.room).emit('message', message)
     }
   )
+
+  socket.on('user list', fn => fn(User.getAll()))
 })
 
 server.listen(PORT, err => {
