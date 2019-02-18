@@ -1,7 +1,5 @@
 // TODO:
 //   * socket controller
-//   * user service
-//   * room service
 
 const http = require('http')
 const express = require('express')
@@ -34,38 +32,71 @@ io.on('connection', socket => {
   socket.on('register', (userID, fn) => {
     try {
       User.register(userID)
-      fn({ ok: true })
+
+      // response :: RegisterResponse
+      const response = { ok: true }
+
+      fn(response)
     } catch (err) {
-      fn({
-        ok: false,
-        message: err.message,
-      })
+      // response :: RegisterResponse
+      const response = { ok: false, message: err.message }
+
+      fn(response)
     }
   })
 
   socket.on('list', fn => {
-    fn({ ok: true, rooms: Room.ROOMS })
+    // response :: ListResponse
+    const response = { ok: true, rooms: Room.ROOMS }
+
+    fn(response)
   })
 
-  socket.on('join', ({ room, userID }) => {
-    socket.join(room.id)
-    io.to(room.id).emit('message', {
-      type: 'announcement',
-      text: `${userID} joined ${room.title}.`,
-    })
-  })
+  socket.on(
+    'join',
+    // req :: JoinRequest
+    req => {
+      socket.join(req.roomID)
 
-  socket.on('leave', ({ room, userID }) => {
-    socket.leave(room.id)
-    io.to(room.id).emit('message', {
-      type: 'announcement',
-      text: `${userID} left ${room.title}.`,
-    })
-  })
+      // room :: ChatRoom
+      const room = Room.getRoomByID(req.roomID)
 
-  socket.on('message', message => {
-    socket.broadcast.to(message.room).emit('message', message)
-  })
+      // message :: Message
+      const message = {
+        type: 'announcement',
+        text: `${req.userID} joined ${room.title}.`,
+      }
+
+      io.to(req.roomID).emit('message', message)
+    },
+  )
+
+  socket.on(
+    'leave',
+    // req :: LeaveRequest
+    req => {
+      socket.leave(req.roomID)
+
+      // room :: ChatRoom
+      const room = Room.getRoomByID(req.roomID)
+
+      // message :: Message
+      const message = {
+        type: 'announcement',
+        text: `${req.userID} left ${room.title}.`,
+      }
+
+      io.to(req.roomID).emit('message', message)
+    }
+  )
+
+  socket.on(
+    'message',
+    // message :: Message
+    message => {
+      socket.broadcast.to(message.room).emit('message', message)
+    }
+  )
 })
 
 server.listen(PORT, err => {

@@ -1,15 +1,4 @@
 // -------------------------------------
-// Data Definitions
-// -------------------------------------
-
-// A ChatRoom is an object: { id:           string
-//                          , title:        string
-//                          , color:        string
-//                          , participants: string[]
-//                          }
-//   * participants - IDs of current participants.
-
-// -------------------------------------
 // Constants
 // -------------------------------------
 
@@ -39,9 +28,12 @@ const chatRooms = ROOMS.reduce(
 // -------------------------------------
 
 // getRoomByID :: string -> ChatRoom
+// Finds a room with a give id, and returns the number of participants.
+// effect. Mutates chatRooms.
 const getRoomByID = id => chatRooms[id]
 
 // join :: string * string -> number
+// effect. Adds a given userID to a room with roomID.
 const join = (roomID, userID) => {
   const room = getRoomByID(roomID)
   const { participants } = room
@@ -51,6 +43,9 @@ const join = (roomID, userID) => {
   return participants.length
 }
 
+// leave :: string * string -> number
+// Removes a given userID from a room with roomID, and returns the number of participants.
+// effect. Mutates chatRooms.
 const leave = (roomID, userID) => {
   const room = getRoomByID(roomID)
   const { participants } = room
@@ -70,6 +65,7 @@ const leave = (roomID, userID) => {
 
 module.exports = {
   ROOMS,
+  getRoomByID,
   join,
   leave,
 }

@@ -12,12 +12,6 @@ import SendIcon from './send-icon'
 
 // A ChatRoomState is an object: { messages: Message[] }
 
-// A Message is an object: { sender: string?
-//                         , type:   'announcement' | 'default'
-//                         , text:   string
-//                         , error:  string?
-//                         }
-
 // -------------------------------------
 // Component
 // -------------------------------------
@@ -36,7 +30,7 @@ class ChatRoom extends React.Component {
 
   scrollContainer = React.createRef()
 
-  // state :: ChatRoomstate
+  // state :: ChatRoomState
   state = {
     messages: [],
   }
@@ -54,22 +48,31 @@ class ChatRoom extends React.Component {
       )
     })
 
+    // joinRequest :: JoinRequest
+    const joinRequest = {
+      roomID: room.id,
+      userID,
+    }
+
     // Re-join room when socket reconnects.
     //   * This happens when server restarts.
     socket.on('connect', () => {
-      socket.emit('join', { room, userID })
+      socket.emit('join', joinRequest)
     })
 
-    socket.emit('join', { room, userID })
+    socket.emit('join', joinRequest)
   }
 
   componentWillUnmount() {
     const { props } = this
 
-    this.props.socket.emit('leave', {
-      room: props.room,
+    // leaveRequest :: LeaveRequest
+    const leaveRequest = {
+      roomID: props.room.id,
       userID: props.userID,
-    })
+    }
+
+    this.props.socket.emit('leave', leaveRequest)
   }
 
   // scrollToBottom :: boolean -> void
@@ -100,7 +103,7 @@ class ChatRoom extends React.Component {
     }
 
     this.setState(({ messages }) => ({
-      messages: [ ...messages, message ],
+      messages: [...messages, message],
     }), () => {
       this.props.socket.emit('message', message)
       inputNode.value = ''

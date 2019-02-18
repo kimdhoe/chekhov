@@ -3,16 +3,31 @@ import PropTypes from 'prop-types'
 
 import * as styles from './index.module.css'
 
+// -------------------------------------
+// Data Definitions
+// -------------------------------------
+
+// A EntranceState is an object: { input:   string
+//                               , message: string
+//                               }
+
+// -------------------------------------
+// Component
+// -------------------------------------
+
 class Entrance extends React.Component {
   static propTypes = {
     socket: PropTypes.object.isRequired,
+    onRegister: PropTypes.func.isRequired,
   }
 
+  // state :: EntranceState
   state = {
     input: '',
     message: '',
   }
 
+  // handleChangeInput :: Event -> void
   handleChangeInput = e => {
     this.setState({
       input: e.target.value,
@@ -20,6 +35,7 @@ class Entrance extends React.Component {
     })
   }
 
+  // handleSubmit :: Event -> void
   handleSubmit = e => {
     e.preventDefault()
 
@@ -31,7 +47,7 @@ class Entrance extends React.Component {
     this.props.socket.emit(
       'register',
       userID,
-      // boolean * string? -> void
+      // RegisterResponse -> void
       ({ ok, message }) => {
         if (!ok) {
           this.setState({ message })

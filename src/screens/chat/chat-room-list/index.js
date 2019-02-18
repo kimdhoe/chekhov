@@ -11,10 +11,6 @@ import * as styles from './index.module.css'
 //                                   , error: string
 //                                   }
 
-// A ChatRoom is an object: { id:    string
-//                          , title: string
-//                          }
-
 // -------------------------------------
 // Component
 // -------------------------------------
