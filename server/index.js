@@ -8,6 +8,7 @@ const express = require('express')
 const socketIO = require('socket.io')
 
 const User = require('./User')
+const Room = require('./Room')
 
 // -------------------------------------
 // Constants
@@ -15,16 +16,6 @@ const User = require('./User')
 
 // PORT :: number
 const PORT = 3001
-
-// ROOMS :: ChatRoom[]
-const ROOMS = [
-  { id: 'a', title: 'Moon',    color: '#3E93A7' },
-  { id: 'b', title: 'Mercury', color: '#27479A' },
-  { id: 'c', title: 'Mars',    color: '#FAC167' },
-  { id: 'd', title: 'Earth',   color: '#EB7D9A' },
-  { id: 'e', title: 'Pluto',   color: '#1EA368' },
-  { id: 'f', title: 'Uranus',  color: '#9CA4BF' },
-]
 
 // -------------------------------------
 // Main
@@ -53,7 +44,7 @@ io.on('connection', socket => {
   })
 
   socket.on('list', fn => {
-    fn({ ok: true, rooms: ROOMS })
+    fn({ ok: true, rooms: Room.CHAT_ROOMS })
   })
 
   socket.on('join', ({ room, userID }) => {
