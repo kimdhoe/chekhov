@@ -67,7 +67,7 @@ io.on('connection', socket => {
         text: `${req.userID} joined ${room.title}.`,
       }
 
-      io.to(req.roomID).emit('message', message)
+      io.to(room.id).emit('message', message)
     },
   )
 
@@ -101,7 +101,6 @@ io.on('connection', socket => {
 
 server.listen(PORT, err => {
   if (err) {
-    console.log('ERROR', err.message)
     throw err
   }
 
