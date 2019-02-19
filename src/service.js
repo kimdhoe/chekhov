@@ -7,8 +7,8 @@ function makeService(socket) {
       })
     },
 
-    invite(senderID, receiverID, room) {
-      socket.emit('invitation', senderID, receiverID, room)
+    invite(senderID, receiverID, room, fn) {
+      socket.emit('invitation', senderID, receiverID, room, fn)
     }
   }
 }

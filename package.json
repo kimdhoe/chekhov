@@ -4,6 +4,7 @@
   "private": true,
   "author": "Donghee Kim <kimdhoe1@gmail.com>",
   "dependencies": {
+    "animated": "^0.2.2",
     "express": "^4.16.4",
     "normalize.css": "^8.0.1",
     "react": "^16.8.2",

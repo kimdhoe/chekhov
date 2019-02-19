@@ -15,6 +15,7 @@ import Invite from './invite'
 // A ChatRoomState is an object: { messages:        Message[]
 //                               , image:           string?,
 //                               , imageDimensions: Dimensions?
+//                               , showUserList:    boolean
 //                               }
 
 // -------------------------------------
@@ -40,6 +41,7 @@ class ChatRoom extends React.Component {
     messages: [],
     image: null,
     imageDimensions: null,
+    showUserList: false,
   }
 
   componentDidMount() {
@@ -90,6 +92,10 @@ class ChatRoom extends React.Component {
       top: scrollNode.scrollHeight,
       behavior: animated ? 'smooth' : 'auto',
     })
+  }
+
+  hideInviteModal = () => {
+    this.setState({ showUserList: false })
   }
 
   // handleSubmit :: Event -> void
@@ -156,16 +162,12 @@ class ChatRoom extends React.Component {
   }
 
   handleInvitePress = () => {
-    console.log('invite')
-
-    this.props.socket.emit('user list', users => {
-      console.log('Users', users)
-    })
+    this.setState({ showUserList: true })
   }
 
   render() {
     const { userID, room, onPressBack } = this.props
-    const { messages } = this.state
+    const { messages, showUserList } = this.state
 
     return (
       <div className={styles.container}>
@@ -250,14 +252,14 @@ class ChatRoom extends React.Component {
           </form>
         </div>
 
-        <div className={styles.modal}>
-          <Invite
-            service={this.props.service}
-            userID={this.props.userID}
-            socket={this.props.socket}
-            room={this.props.room}
-          />
-        </div>
+        <Invite
+          show={showUserList}
+          close={this.hideInviteModal}
+          service={this.props.service}
+          userID={this.props.userID}
+          socket={this.props.socket}
+          room={this.props.room}
+        />
       </div>
     )
   }
@@ -273,12 +275,7 @@ const Message = ({ message, mine = false }) => {
   }
 
   return (
-    <div
-      className={[
-        styles.message,
-        mine && styles.myMessage
-      ].join(' ')}
-    >
+    <div className={[ styles.message, mine && styles.myMessage ].join(' ')}>
       {!mine && (
         <p className={styles.messageSender}>
           {message.sender}
@@ -286,11 +283,7 @@ const Message = ({ message, mine = false }) => {
       )}
       {!!message.image && (
         <p className={styles.attachment}>
-          <img
-            className={styles.messageImage}
-            src={message.image}
-            alt=""
-          />
+          <img className={styles.messageImage} src={message.image} alt="" />
         </p>
       )}
       {message.text && (

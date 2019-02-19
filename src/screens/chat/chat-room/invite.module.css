@@ -1,16 +1,27 @@
 .container {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
-  max-height: 50vh;
+  margin: 0 auto;
+  max-width: 400px;
+  max-height: 70vh;
   min-height: 30vh;
+  width: 90%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 .heading {
   text-align: center;
+  font-size: 17px;
 }
 
 .content {
-  flex: 1;
   overflow: scroll;
 }
 
@@ -38,4 +49,13 @@
 
 .userButton:hover {
   background-color: #f8f9fa;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  outline: none;
+  border: none;
+  cursor: pointer;
 }
