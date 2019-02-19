@@ -5,13 +5,27 @@ import Easing from 'animated/lib/Easing'
 
 import * as styles from './index.module.css'
 
-const AnimatedHeader = Animated.createAnimatedComponent('header')
-const AnimatedForm = Animated.createAnimatedComponent('form')
+const { stagger, timing, createAnimatedComponent, Value } = Animated
+const AnimatedHeader = createAnimatedComponent('header')
+const AnimatedForm = createAnimatedComponent('form')
 
 // -------------------------------------
 // Constants
 // -------------------------------------
 
+const TRANSLATE_Y_INTERPOLATION = {
+  inputRange: [0, 1],
+  outputRange: [15, 0],
+}
+const ENTER_ANIMATION_CONFIG = {
+  toValue: 1,
+  duration: 500,
+  easing: Easing.inOut(Easing.quad),
+}
+const EXIT_ANIMATION_CONFIG = {
+  toValue: 0,
+  duration: 350,
+}
 const APP_NAME = 'Kakao Chat'
 const APP_DESCRIPTION =
   'The most advanced and beautiful chat application in the universe. ' +
@@ -35,68 +49,42 @@ class Entrance extends React.Component {
     onRegister: PropTypes.func.isRequired,
   }
 
+  inputRef = React.createRef()
+
+  enter1 = new Value(0)
+  enter2 = new Value(0)
+  enter3 = new Value(0)
+  translateY1 = this.enter1.interpolate(TRANSLATE_Y_INTERPOLATION)
+  translateY2 = this.enter2.interpolate(TRANSLATE_Y_INTERPOLATION)
+  translateY3 = this.enter3.interpolate(TRANSLATE_Y_INTERPOLATION)
+
   // state :: EntranceState
   state = {
     input: '',
     error: '',
   }
 
-  enter1 = new Animated.Value(0)
-  enter2 = new Animated.Value(0)
-  enter3 = new Animated.Value(0)
-  enter1TranslateY = this.enter1.interpolate({
-    inputRange: [0, 1],
-    outputRange: [15, 0],
-  })
-  enter2TranslateY = this.enter2.interpolate({
-    inputRange: [0, 1],
-    outputRange: [20, 0],
-  })
-  enter3TranslateY = this.enter3.interpolate({
-    inputRange: [0, 1],
-    outputRange: [25, 0],
-  })
-
-  inputRef = React.createRef()
-
   componentDidMount() {
     this.enter()
   }
 
+  // enter :: -> void
+  // Reveals chat-room buttons with animation.
   enter = () => {
-    Animated.stagger(250, [
-      Animated.timing(this.enter1, {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.inOut(Easing.quad),
-      }),
-      Animated.timing(this.enter2, {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.inOut(Easing.quad),
-      }),
-      Animated.timing(this.enter3, {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.inOut(Easing.quad),
-      }),
+    stagger(250, [
+      timing(this.enter1, ENTER_ANIMATION_CONFIG),
+      timing(this.enter2, ENTER_ANIMATION_CONFIG),
+      timing(this.enter3, ENTER_ANIMATION_CONFIG),
     ]).start()
   }
 
+  // exit :: -> void
+  // Hides chat-room buttons with animation.
   exit = fn => {
-    Animated.stagger(70, [
-      Animated.timing(this.enter3, {
-        toValue: 0,
-        duration: 350,
-      }),
-      Animated.timing(this.enter2, {
-        toValue: 0,
-        duration: 350,
-      }),
-      Animated.timing(this.enter1, {
-        toValue: 0,
-        duration: 350,
-      }),
+    stagger(70, [
+      timing(this.enter3, EXIT_ANIMATION_CONFIG),
+      timing(this.enter2, EXIT_ANIMATION_CONFIG),
+      timing(this.enter1, EXIT_ANIMATION_CONFIG),
     ]).start(fn)
   }
 
@@ -147,7 +135,7 @@ class Entrance extends React.Component {
       style={{
         opacity: this.enter1,
         transform: [
-          { translateY: this.enter1TranslateY },
+          { translateY: this.translateY1 },
         ]
       }}
     >
@@ -161,7 +149,7 @@ class Entrance extends React.Component {
       style={{
         opacity: this.enter2,
         transform: [
-          { translateY: this.enter2TranslateY },
+          { translateY: this.translateY2 },
         ]
       }}
     >
@@ -180,7 +168,7 @@ class Entrance extends React.Component {
       style={{
         opacity: this.enter3,
         transform: [
-          { translateY: this.enter3TranslateY },
+          { translateY: this.translateY3 },
         ]
       }}
       onSubmit={this.handleSubmit}
