@@ -175,3 +175,18 @@
   max-height: 150px;
   border-radius: 13px;
 }
+
+.modal {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 400px;
+  width: 90%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+
+  overflow: hidden;
+}

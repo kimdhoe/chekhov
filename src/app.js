@@ -5,6 +5,7 @@ import {
   Entrance,
   Chat,
 } from './screens'
+import { makeService } from './service'
 
 // -------------------------------------
 // Data Definitions
@@ -23,6 +24,7 @@ import {
 class App extends React.Component {
   // state :: AppState
   state = {
+    service: null,
     socket: null,
     userID: null,
   }
@@ -30,8 +32,9 @@ class App extends React.Component {
   componentDidMount() {
     // socket :: Socket
     const socket = io(process.env.REACT_APP_ENDPOINT)
+    const service = makeService(socket)
 
-    this.setState({ socket })
+    this.setState({ socket, service })
   }
 
   // handleRegister :: string -> void
@@ -40,7 +43,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { socket, userID } = this.state
+    const { service, socket, userID } = this.state
 
     if (!socket) return null
 
@@ -48,11 +51,13 @@ class App extends React.Component {
       <div className="App" style={{ height: '100%' }}>
         {userID ? (
           <Chat
+            service={service}
             socket={socket}
             userID={userID}
           />
         ) : (
             <Entrance
+              service={service}
               socket={socket}
               onRegister={this.handleRegister}
             />

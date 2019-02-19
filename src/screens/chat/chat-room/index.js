@@ -6,6 +6,7 @@ import ArrowBackIcon from './arrow-back-icon'
 import PlusIcon from './plus-icon'
 import ImageIcon from './image-icon'
 import SendIcon from './send-icon'
+import Invite from './invite'
 
 // -------------------------------------
 // Data Definitions
@@ -44,7 +45,7 @@ class ChatRoom extends React.Component {
   componentDidMount() {
     const { socket, room, userID } = this.props
 
-    socket.on('invite', console.log)
+    socket.on('invitation', console.log)
 
     socket.on('message', message => {
       this.setState(
@@ -247,6 +248,15 @@ class ChatRoom extends React.Component {
               </button>
             </div>
           </form>
+        </div>
+
+        <div className={styles.modal}>
+          <Invite
+            service={this.props.service}
+            userID={this.props.userID}
+            socket={this.props.socket}
+            room={this.props.room}
+          />
         </div>
       </div>
     )

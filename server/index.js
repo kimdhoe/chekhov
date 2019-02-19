@@ -101,9 +101,9 @@ io.on('connection', socket => {
 
   socket.on(
     'invitation',
-    // string * string -> void
-    (senderID, receiverID) => {
-      io.to(User.getSocketID(receiverID)).emit('invitation', senderID)
+    // string * string * ChatRoom -> void
+    (senderID, receiverID, room) => {
+      io.to(User.getSocketID(receiverID)).emit('invitation', senderID, room)
     },
   )
 })
