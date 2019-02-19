@@ -13,7 +13,6 @@ const AnimatedForm = Animated.createAnimatedComponent('form')
 // -------------------------------------
 
 const APP_NAME = 'Kakao Chat'
-const APP_SLOGAN = 'Have a Nice Chat'
 const APP_DESCRIPTION =
   'The most advanced and beautiful chat application in the universe. ' +
   'Everybody should be using this. Choose your name and start chatting now.'
@@ -40,20 +39,20 @@ class Entrance extends React.Component {
   state = {
     input: '',
     error: '',
-    enter1: new Animated.Value(0),
-    enter2: new Animated.Value(0),
-    enter3: new Animated.Value(0),
   }
 
-  enter1TranslateY = this.state.enter1.interpolate({
+  enter1 = new Animated.Value(0)
+  enter2 = new Animated.Value(0)
+  enter3 = new Animated.Value(0)
+  enter1TranslateY = this.enter1.interpolate({
     inputRange: [0, 1],
     outputRange: [15, 0],
   })
-  enter2TranslateY = this.state.enter2.interpolate({
+  enter2TranslateY = this.enter2.interpolate({
     inputRange: [0, 1],
     outputRange: [20, 0],
   })
-  enter3TranslateY = this.state.enter2.interpolate({
+  enter3TranslateY = this.enter3.interpolate({
     inputRange: [0, 1],
     outputRange: [25, 0],
   })
@@ -66,17 +65,17 @@ class Entrance extends React.Component {
 
   enter = () => {
     Animated.stagger(250, [
-      Animated.timing(this.state.enter1, {
+      Animated.timing(this.enter1, {
         toValue: 1,
         duration: 500,
         easing: Easing.inOut(Easing.quad),
       }),
-      Animated.timing(this.state.enter2, {
+      Animated.timing(this.enter2, {
         toValue: 1,
         duration: 500,
         easing: Easing.inOut(Easing.quad),
       }),
-      Animated.timing(this.state.enter3, {
+      Animated.timing(this.enter3, {
         toValue: 1,
         duration: 500,
         easing: Easing.inOut(Easing.quad),
@@ -86,15 +85,15 @@ class Entrance extends React.Component {
 
   exit = fn => {
     Animated.stagger(70, [
-      Animated.timing(this.state.enter3, {
+      Animated.timing(this.enter3, {
         toValue: 0,
         duration: 350,
       }),
-      Animated.timing(this.state.enter2, {
+      Animated.timing(this.enter2, {
         toValue: 0,
         duration: 350,
       }),
-      Animated.timing(this.state.enter1, {
+      Animated.timing(this.enter1, {
         toValue: 0,
         duration: 350,
       }),
@@ -105,7 +104,7 @@ class Entrance extends React.Component {
   handleChangeInput = e => {
     this.setState({
       input: e.target.value,
-      message: '',
+      error: '',
     })
   }
 
@@ -116,7 +115,14 @@ class Entrance extends React.Component {
     // userID :: string
     const userID = this.state.input.trim()
 
-    if (!userID) return
+    if (!userID) {
+      this.setState({
+        input: '',
+        error: 'Please choose an ID to start.',
+      })
+      this.inputRef.current.focus()
+      return
+    }
 
     this.props.socket.emit(
       'register',
@@ -135,71 +141,79 @@ class Entrance extends React.Component {
       })
   }
 
-  render() {
-    const { input, error } = this.state
+  renderHeader = () => (
+    <AnimatedHeader
+      className={styles.header}
+      style={{
+        opacity: this.enter1,
+        transform: [
+          { translateY: this.enter1TranslateY },
+        ]
+      }}
+    >
+      <h1 className={styles.h1}>{APP_NAME}</h1>
+    </AnimatedHeader>
+  )
 
+  renderBody = () => (
+    <Animated.div
+      className={styles.top}
+      style={{
+        opacity: this.enter2,
+        transform: [
+          { translateY: this.enter2TranslateY },
+        ]
+      }}
+    >
+      <h2 className={styles.subtitle}>
+        Have a <span className={styles.highlighted}>Nice</span> Chat
+      </h2>
+      <p className={styles.description}>
+        {APP_DESCRIPTION}
+      </p>
+    </Animated.div>
+  )
+
+  renderForm = () => (
+    <AnimatedForm
+      className={styles.bottom}
+      style={{
+        opacity: this.enter3,
+        transform: [
+          { translateY: this.enter3TranslateY },
+        ]
+      }}
+      onSubmit={this.handleSubmit}
+    >
+      <div className={styles.inputContainer}>
+        <input
+          className={styles.input}
+          ref={this.inputRef}
+          type="text"
+          placeholder="User ID"
+          value={this.state.input}
+          onChange={this.handleChangeInput}
+        />
+      </div>
+
+      <p className={styles.error}>{this.state.error}</p>
+
+      <button type="submit" className={styles.button}>
+        Connect
+      </button>
+    </AnimatedForm>
+  )
+
+  render() {
     return (
       <Animated.div
         className={styles.container}
-        style={{ opacity: this.state.enter1 }}
+        style={{ opacity: this.enter1 }}
       >
         <div className={styles.wrapper}>
-          <AnimatedHeader
-            className={styles.header}
-            style={{
-              opacity: this.state.enter1,
-              transform: [
-                { translateY: this.enter1TranslateY },
-              ]
-            }}
-          >
-            <h1 className={styles.h1}>{APP_NAME}</h1>
-          </AnimatedHeader>
-
-          <Animated.div
-            className={styles.top}
-            style={{
-              opacity: this.state.enter2,
-              transform: [
-                { translateY: this.enter2TranslateY },
-              ]
-            }}
-          >
-            <h2 className={styles.subtitle}>
-              {APP_SLOGAN}
-            </h2>
-            <p className={styles.description}>
-              {APP_DESCRIPTION}
-            </p>
-          </Animated.div>
-
-          <AnimatedForm
-            className={styles.bottom}
-            style={{
-              opacity: this.state.enter3,
-              transform: [
-                { translateY: this.enter3TranslateY },
-              ]
-            }}
-            onSubmit={this.handleSubmit}
-          >
-            <div className={styles.inputContainer}>
-              <input
-                className={styles.input}
-                ref={this.inputRef}
-                type="text"
-                placeholder="User ID"
-                value={input}
-                onChange={this.handleChangeInput}
-              />
-            </div>
-
-            <p className={styles.error}>{error}</p>
-
-            <button type="submit" className={styles.button}>
-              Connect
-            </button>
-          </AnimatedForm>
+          {this.renderHeader()}
+          {this.renderBody()}
+          {this.renderForm()}
         </div>
       </Animated.div>
     )

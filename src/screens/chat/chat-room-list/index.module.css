@@ -8,6 +8,11 @@
   margin-right: auto;
   max-width: 720px;
   font-size: 30px;
+  color: #444;
+}
+
+.greeting {
+  color: #adb5bd;
 }
 
 .headerText {

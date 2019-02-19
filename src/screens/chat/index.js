@@ -76,6 +76,7 @@ class Chat extends React.Component {
           : (
             <ChatRoomList
               socket={socket}
+              userID={userID}
               onPressRoom={this.handleRoomPress}
             />
           )
