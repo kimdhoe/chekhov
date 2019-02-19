@@ -4,8 +4,9 @@ import Animated from 'animated/lib/targets/react-dom'
 
 import * as styles from './index.module.css'
 
-const AnimatedHeader = Animated.createAnimatedComponent('header')
-const AnimatedButton = Animated.createAnimatedComponent('button')
+const { stagger, parallel, timing, createAnimatedComponent, Value } = Animated
+const AnimatedHeader = createAnimatedComponent('header')
+const AnimatedButton = createAnimatedComponent('button')
 
 // -------------------------------------
 // Data Definitions
@@ -27,12 +28,11 @@ class ChatRoomList extends React.Component {
   }
 
   // headerOpacity :: Aniamted.Value
-  headerOpacity = new Animated.Value(0)
+  headerOpacity = new Value(0)
   // opacities :: Aniamted.Value[]
   opacities = []
   // translateYs :: Aniamted.Value[]
   translateYs = []
-
 
   // state :: ChatRoomListState
   state = {
@@ -42,7 +42,7 @@ class ChatRoomList extends React.Component {
   }
 
   componentDidMount() {
-    Animated.timing(this.headerOpacity, {
+    timing(this.headerOpacity, {
       toValue: 1,
       duration: 300,
     }).start()
@@ -55,7 +55,7 @@ class ChatRoomList extends React.Component {
           this.setState({ error: message })
         } else {
           rooms.forEach(room => {
-            const opacity = new Animated.Value(0)
+            const opacity = new Value(0)
             this.opacities.push(opacity)
             this.translateYs.push(opacity.interpolate({
               inputRange: [0, 1],
@@ -71,28 +71,25 @@ class ChatRoomList extends React.Component {
     )
   }
 
+  // enter :: -> void
+  // Reveals chat-room buttons with animation.
   enter = () => {
-    Animated.stagger(
+    stagger(
       19,
-      this.opacities.map(anim => Animated.timing(anim, {
+      this.opacities.map(anim => timing(anim, {
         toValue: 1,
         duration: 400,
       })),
     ).start()
   }
 
+  // exit :: -> void
+  // Hides chat-room buttons with animation.
   exit = fn => {
-    Animated.parallel([
-      Animated.timing(this.headerOpacity, {
-        toValue: 0,
-        duration: 200,
-      }),
-      Animated.stagger(
-        11,
-        this.opacities.map(anim => Animated.timing(anim, {
-          toValue: 0,
-          duration: 300,
-        })),
+    parallel([
+      timing(this.headerOpacity, { toValue: 0, duration: 200 }),
+      stagger(11, this.opacities.map(
+        opacity => timing(opacity, { toValue: 0, duration: 300 })),
       ),
     ]).start(fn)
   }
@@ -139,9 +136,7 @@ class ChatRoomList extends React.Component {
       style={{
         backgroundColor: room.color,
         opacity: this.opacities[i],
-        transform: [
-          { translateY: this.translateYs[i] },
-        ],
+        transform: [{ translateY: this.translateYs[i] }],
       }}
       onClick={() => this.handleRoomClick(room)}
     >

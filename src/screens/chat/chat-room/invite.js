@@ -1,7 +1,7 @@
 import React from 'react'
 import Animated from 'animated/lib/targets/react-dom'
 
-import CloseIcon from './close-icon'
+import CloseIcon from '../../../components/close-icon'
 import * as styles from './invite.module.css'
 
 // -------------------------------------

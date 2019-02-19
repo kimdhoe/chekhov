@@ -69,7 +69,7 @@ class Entrance extends React.Component {
   }
 
   // enter :: -> void
-  // Reveals chat-room buttons with animation.
+  // Reveals components with animation.
   enter = () => {
     stagger(250, [
       timing(this.enter1, ENTER_ANIMATION_CONFIG),
@@ -79,7 +79,7 @@ class Entrance extends React.Component {
   }
 
   // exit :: -> void
-  // Hides chat-room buttons with animation.
+  // Hides components with animation.
   exit = fn => {
     stagger(70, [
       timing(this.enter3, EXIT_ANIMATION_CONFIG),

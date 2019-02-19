@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import * as styles from './index.module.css'
-import ArrowBackIcon from './arrow-back-icon'
-import PlusIcon from './plus-icon'
-import ImageIcon from './image-icon'
-import SendIcon from './send-icon'
 import Invite from './invite'
+import ArrowBackIcon from '../../../components/arrow-back-icon'
+import PlusIcon from '../../../components/plus-icon'
+import ImageIcon from '../../../components/image-icon'
+import SendIcon from '../../../components/send-icon'
 
 // -------------------------------------
 // Data Definitions
