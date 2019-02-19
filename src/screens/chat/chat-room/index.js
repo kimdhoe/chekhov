@@ -44,6 +44,8 @@ class ChatRoom extends React.Component {
   componentDidMount() {
     const { socket, room, userID } = this.props
 
+    socket.on('invite', console.log)
+
     socket.on('message', message => {
       this.setState(
         state => ({ messages: [...state.messages, message] }),
@@ -51,8 +53,8 @@ class ChatRoom extends React.Component {
       )
     })
 
-    // joinRequest :: JoinRequest
-    const joinRequest = {
+    // join :: JoinRequest
+    const join = {
       roomID: room.id,
       userID,
     }
@@ -60,22 +62,22 @@ class ChatRoom extends React.Component {
     // Re-join room when socket reconnects.
     //   * This happens when server restarts.
     socket.on('connect', () => {
-      socket.emit('join', joinRequest)
+      socket.emit('join', join)
     })
 
-    socket.emit('join', joinRequest)
+    socket.emit('join', join)
   }
 
   componentWillUnmount() {
     const { props } = this
 
-    // leaveRequest :: LeaveRequest
-    const leaveRequest = {
+    // leave :: LeaveRequest
+    const leave = {
       roomID: props.room.id,
       userID: props.userID,
     }
 
-    props.socket.emit('leave', leaveRequest)
+    props.socket.emit('leave', leave)
   }
 
   // scrollToBottom :: boolean -> void
@@ -116,7 +118,7 @@ class ChatRoom extends React.Component {
     }), () => {
       props.socket.emit('message', message)
       inputNode.value = ''
-      inputNode.blur()
+      // inputNode.blur()
       this.scrollToBottom()
     })
   }
@@ -234,7 +236,7 @@ class ChatRoom extends React.Component {
             <div className={styles.field}>
               <input
                 className={styles.input}
-                // autoFocus
+                autoFocus
                 autoComplete="off"
                 name="message"
                 type="text"

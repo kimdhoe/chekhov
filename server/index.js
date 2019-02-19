@@ -29,76 +29,83 @@ const io = socketIO(server)
 io.on('connection', socket => {
   socket.on('disconnect', () => { })
 
-  socket.on('register', (userID, fn) => {
-    try {
-      User.register(userID)
-
-      // response :: RegisterResponse
-      const response = { ok: true }
-
-      fn(response)
-    } catch (err) {
-      // response :: RegisterResponse
-      const response = { ok: false, message: err.message }
-
-      fn(response)
+  socket.on(
+    'register',
+    // string * (RegisterResponse -> void) -> void
+    (userID, fn) => {
+      try {
+        User.register(userID, socket.id)
+        fn({ ok: true })
+      } catch (err) {
+        fn({ ok: false, message: err.message })
+      }
     }
-  })
+  )
 
-  socket.on('list', fn => {
-    // response :: ListResponse
-    const response = { ok: true, rooms: Room.ROOMS }
-
-    fn(response)
-  })
+  socket.on(
+    'list',
+    // (ListResponse -> void) -> void
+    fn => fn({ ok: true, rooms: Room.ROOMS })
+  )
 
   socket.on(
     'join',
-    // req :: JoinRequest
+    // JoinRequest -> void
     req => {
       socket.join(req.roomID)
 
       // room :: ChatRoom
       const room = Room.getRoomByID(req.roomID)
-
       // message :: Message
       const message = {
         type: 'announcement',
         text: `${req.userID} joined ${room.title}.`,
       }
 
-      io.to(room.id).emit('message', message)
+      io.in(room.id).emit('message', message)
     },
   )
 
   socket.on(
     'leave',
-    // req :: LeaveRequest
+    // LeaveRequest -> void
     req => {
       socket.leave(req.roomID)
 
-      // room :: ChatRoom
+      // room :: ChatRom
       const room = Room.getRoomByID(req.roomID)
-
       // message :: Message
       const message = {
         type: 'announcement',
         text: `${req.userID} left ${room.title}.`,
       }
 
-      io.to(req.roomID).emit('message', message)
+      io.in(req.roomID).emit('message', message)
     }
   )
 
   socket.on(
     'message',
-    // message :: Message
+    // Message -> void
     message => {
-      socket.broadcast.to(message.room).emit('message', message)
+      socket.to(message.room).emit('message', message)
+    },
+  )
+
+  socket.on(
+    'user list',
+    fn => {
+      fn(User.getAll())
     }
   )
 
-  socket.on('user list', fn => fn(User.getAll()))
+  socket.on(
+    'invitation',
+    // string * string -> void
+    (senderID, receiverID) => {
+      io.to(User.getSocketID(receiverID)).emit('invitation', senderID)
+    },
+  )
 })
 
 server.listen(PORT, err => {

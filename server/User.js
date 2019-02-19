@@ -2,11 +2,11 @@
 // State
 // -------------------------------------
 
-// userTable :: { [string]: boolean }
+// userTable :: { [string]: string }
 // state. Keeps track of registered users.
 // interpretation.
 //   - key - User ID.
-//   - value - Is this ID being used?
+//   - value - Socket ID.
 let _userTable = {}
 
 // -------------------------------------
@@ -19,14 +19,26 @@ function getAll() {
   return Object.keys(_userTable)
 }
 
-// register :: string -> void
-// effect. Adds a give user-id to _userTable.
-function register(userID) {
+// getSocketID :: string -> string
+// effect. returns a socket ID of a given user-id.
+function getSocketID(userID) {
+  const socketID = _userTable[userID]
+
+  if (!socketID) {
+    throw new Error('No socket ID for the user.')
+  }
+
+  return socketID
+}
+
+// register :: string * string -> void
+// effect. Adds a given user-id and socket-id to _userTable.
+function register(userID, socketID) {
   if (isRegistered(userID)) {
     throw new Error(`Someone already took the ID "${userID}".`)
   }
 
-  _userTable[userID] = true
+  _userTable[userID] = socketID
 }
 
 // deregister :: string -> void
@@ -55,6 +67,7 @@ function clear() {
 
 module.exports = {
   getAll,
+  getSocketID,
   register,
   deregister,
   isRegistered,
