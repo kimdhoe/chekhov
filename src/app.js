@@ -6,6 +6,7 @@ import {
   Chat,
 } from './screens'
 import { makeService } from './service'
+import * as styles from './app.module.css'
 
 // -------------------------------------
 // Data Definitions
@@ -30,10 +31,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // socket :: Socket
     const socket = io(process.env.REACT_APP_ENDPOINT)
     const service = makeService(socket)
-
     this.setState({ socket, service })
   }
 
@@ -48,20 +47,23 @@ class App extends React.Component {
     if (!socket) return null
 
     return (
-      <div className="App" style={{ height: '100%' }}>
-        {userID ? (
-          <Chat
-            service={service}
-            socket={socket}
-            userID={userID}
-          />
-        ) : (
+      <div className={styles.container}>
+        {userID
+          ? (
+            <Chat
+              service={service}
+              socket={socket}
+              userID={userID}
+            />
+          )
+          : (
             <Entrance
               service={service}
               socket={socket}
               onRegister={this.handleRegister}
             />
-          )}
+          )
+        }
       </div>
     );
   }
