@@ -16,9 +16,9 @@ const ROOMS = [
 // State
 // -------------------------------------
 
-// chatRooms :: { [string]: object}
+// _chatRooms :: { [string]: object}
 // state. Keeps track of chat-room status.
-const chatRooms = ROOMS.reduce(
+const _chatRooms = ROOMS.reduce(
   (acc, room) => ({ ...acc, [room.id]: room }),
   {},
 )
@@ -28,9 +28,8 @@ const chatRooms = ROOMS.reduce(
 // -------------------------------------
 
 // getRoomByID :: string -> ChatRoom
-// Finds a room with a give id, and returns the number of participants.
-// effect. Mutates chatRooms.
-const getRoomByID = id => chatRooms[id]
+// Finds a room with a given id.
+const getRoomByID = id => _chatRooms[id]
 
 // join :: string * string -> number
 // effect. Adds a given userID to a room with roomID.
