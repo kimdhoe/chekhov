@@ -16,7 +16,6 @@ import SendIcon from '../../../components/send-icon'
 
 // A ChatRoomState is an object: { messages:        Message[]
 //                               , image:           string?,
-//                               , imageDimensions: Dimensions?
 //                               , showUserList:    boolean
 //                               }
 
@@ -36,7 +35,8 @@ class ChatRoom extends React.Component {
     onPressBack: PropTypes.func.isRequired,
   }
 
-  scrollContainer = React.createRef()
+  scrollContainerRef = React.createRef()
+  inputRef = React.createRef()
 
   opacity = new Animated.Value(0)
 
@@ -44,15 +44,17 @@ class ChatRoom extends React.Component {
   state = {
     messages: [],
     image: null,
-    imageDimensions: null,
     showUserList: false,
   }
 
   componentDidMount() {
     this._isMounted = true
     this.fadeIn()
+
     const { socket, room, userID } = this.props
+
     socket.on('invitation', console.log)
+
     socket.on('message', message => {
       this._isMounted && this.setState(
         state => ({ messages: [...state.messages, message] }),
@@ -109,7 +111,7 @@ class ChatRoom extends React.Component {
   // scrollToBottom :: boolean -> void
   scrollToBottom = (animated = true) => {
     // scrollNode :: HTMLElement
-    const scrollNode = this.scrollContainer.current
+    const scrollNode = this.scrollContainerRef.current
 
     scrollNode.scrollTo({
       top: scrollNode.scrollHeight,
@@ -138,52 +140,29 @@ class ChatRoom extends React.Component {
       text: inputNode.value,
       room: props.room.id,
       image: state.image,
-      imageDimensions: state.imageDimensions,
     }
 
     this.setState(({ messages }) => ({
       messages: [...messages, message],
       image: null,
-      imageDimensions: null,
     }), () => {
       props.socket.emit('message', message)
       inputNode.value = ''
-      // inputNode.blur()
       this.scrollToBottom()
     })
   }
 
-  getImageData = file => {
-    return new Promise(resolve => {
-      const reader = new FileReader()
-      reader.onload = e => {
-        const img = new Image()
-        img.onload = () => {
-          resolve({
-            width: img.naturalWidth,
-            height: img.naturalHeight,
-            data: reader.result,
-          })
-        }
-        img.src = reader.result
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
   handleFileChange = async e => {
+    e.persist()
     const [file] = e.target.files
 
     if (!file) return
 
-    const imageData = await this.getImageData(file)
+    const imageData = await getImageData(file)
 
-    this.setState({
-      image: imageData.data,
-      imageDimensions: {
-        width: imageData.width,
-        height: imageData.height,
-      },
+    this.setState({ image: imageData.data }, () => {
+      e.target.value = null
+      this.inputRef.current.focus()
     })
   }
 
@@ -191,113 +170,137 @@ class ChatRoom extends React.Component {
     this.setState({ showUserList: true })
   }
 
-  render() {
-    const { userID, room, onPressBack } = this.props
-    const { messages, showUserList } = this.state
+  renderHeader = () => (
+    <div
+      className={styles.headerContainer}
+      style={{ backgroundColor: this.props.room.color }}
+    >
+      <header className={styles.header}>
+        <button
+          className={styles.backButton}
+          onClick={() => this.fadeOut(this.props.onPressBack)}
+        >
+          <ArrowBackIcon />
+        </button>
 
+        <h2 className={styles.titleText}>{this.props.room.title}</h2>
+
+        <button
+          className={styles.inviteButton}
+          onClick={this.handleInvitePress}
+        >
+          <PlusIcon />
+        </button>
+      </header>
+    </div>
+  )
+
+  renderChat = () => (
+    <div
+      ref={this.scrollContainerRef}
+      className={styles.messagesContainer}
+    >
+      <div className={styles.messagesWrapper}>
+        {this.state.messages.map((message, i) => (
+          <Message
+            key={i}
+            message={message}
+            mine={message.sender === this.props.userID}
+          />
+        ))}
+      </div>
+    </div>
+  )
+
+  renderEditor = () => (
+    <div className={styles.editor}>
+      <div className={styles.editorLeft}>
+        <label
+          className={styles.sendImageButton}
+          htmlFor="file"
+        >
+          <input
+            className={styles.file}
+            id="file"
+            type="file"
+            accept="image/*"
+            onChange={this.handleFileChange}
+          />
+          <ImageIcon />
+        </label>
+      </div>
+
+      <form
+        className={styles.editorRight}
+        onSubmit={this.handleSubmit}
+      >
+        {this.state.image && (
+          <img
+            alt=""
+            className={styles.imagePreview}
+            src={this.state.image}
+          />
+        )}
+        <div className={styles.field}>
+          <input
+            ref={this.inputRef}
+            className={styles.input}
+            autoFocus
+            autoComplete="off"
+            name="message"
+            type="text"
+            placeholder="Type here"
+          />
+          <button className={styles.sendButton} type="submit">
+            <SendIcon />
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+
+  renderInviteModal = () => (
+    <Invite
+      show={this.state.showUserList}
+      close={this.hideInviteModal}
+      service={this.props.service}
+      userID={this.props.userID}
+      socket={this.props.socket}
+      room={this.props.room}
+    />
+  )
+
+  render() {
     return (
       <Animated.div
         className={styles.container}
         style={{ opacity: this.opacity }}
       >
-        <div
-          className={styles.headerContainer}
-          style={{ backgroundColor: room.color }}
-        >
-          <header className={styles.header}>
-            <button
-              className={styles.backButton}
-              onClick={() => {
-                this.fadeOut(onPressBack)
-                // onPressBack()
-              }}
-            >
-              <ArrowBackIcon />
-            </button>
-
-            <h2 className={styles.titleText}>
-              {room.title}
-            </h2>
-
-            <button
-              className={styles.inviteButton}
-              onClick={this.handleInvitePress}
-            >
-              <PlusIcon />
-            </button>
-          </header>
-        </div>
-
-        <div
-          ref={this.scrollContainer}
-          className={styles.messagesContainer}
-        >
-          <div className={styles.messagesWrapper}>
-            {messages.map((message, i) => (
-              <Message
-                key={i}
-                message={message}
-                mine={message.sender === userID}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.editor}>
-          <div className={styles.editorLeft}>
-            <label
-              className={styles.sendImageButton}
-              htmlFor="file"
-            >
-              <input
-                className={styles.file}
-                id="file"
-                type="file"
-                accept="image/jpeg,image/png"
-                onChange={this.handleFileChange}
-              />
-              <ImageIcon />
-            </label>
-          </div>
-
-          <form
-            className={styles.editorRight}
-            onSubmit={this.handleSubmit}
-          >
-            {this.state.image && (
-              <img
-                alt=""
-                className={styles.imagePreview}
-                src={this.state.image}
-              />
-            )}
-            <div className={styles.field}>
-              <input
-                className={styles.input}
-                autoFocus
-                autoComplete="off"
-                name="message"
-                type="text"
-                placeholder="Type here"
-              />
-              <button className={styles.sendButton} type="submit">
-                <SendIcon />
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <Invite
-          show={showUserList}
-          close={this.hideInviteModal}
-          service={this.props.service}
-          userID={this.props.userID}
-          socket={this.props.socket}
-          room={this.props.room}
-        />
+        {this.renderHeader()}
+        {this.renderChat()}
+        {this.renderEditor()}
+        {this.renderInviteModal()}
       </Animated.div>
     )
   }
+}
+
+
+// getImageData :: File -> Promise<{ data: string }>
+const getImageData = file => {
+  return new Promise(resolve => {
+    const reader = new FileReader()
+    reader.onload = e => {
+      const img = new Image()
+      img.onload = () => {
+        resolve({
+          data: reader.result,
+        })
+      }
+      img.src = reader.result
+    }
+    reader.readAsDataURL(file)
+  })
 }
 
 export default ChatRoom
