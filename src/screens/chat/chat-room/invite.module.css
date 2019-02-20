@@ -8,7 +8,7 @@
   margin: 0 auto;
   max-width: 400px;
   max-height: 70vh;
-  min-height: 30vh;
+  min-height: 250px;
   width: 90%;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 6px 20px 0 rgba(0, 0, 0, 0.04),0 1px 3px 0 rgba(0, 0, 0, 0.07);
   background-color: white;
@@ -29,6 +29,17 @@
 .users {
   padding: 0;
   text-align: center;
+}
+
+.placeholderItem {
+  margin: 10px 15px;
+  height: 47px;
+  border-radius: 15px;
+  background-color: #f8f9fa;
+}
+
+.emptyUsers {
+  margin-top: 40px;
 }
 
 .user {
