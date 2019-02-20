@@ -16,12 +16,16 @@ const ROOMS = [
 // State
 // -------------------------------------
 
-// _chatRooms :: { [string]: object}
+// _chatRooms :: { [string]: ChatRoom }
 // state. Keeps track of chat-room status.
 const _chatRooms = ROOMS.reduce(
   (acc, room) => ({ ...acc, [room.id]: room }),
   {},
 )
+
+// _socketIDToRooms :: { [string]: ChatRoom }
+// state. Keeps track of socketID-room map.
+const _socketIDToRooms = {}
 
 // -------------------------------------
 // Functions
@@ -62,9 +66,22 @@ const leave = (roomID, userID) => {
   return participants.length
 }
 
+const setRoomForSocket = (socketID, room) => {
+  _socketIDToRooms[socketID] = room
+}
+
+const getRoomForSocket = socketID => _socketIDToRooms[socketID]
+
+const removeRoomForSocket = socketID => {
+  delete _socketIDToRooms[socketID]
+}
+
 module.exports = {
   ROOMS,
   getRoomByID,
+  setRoomForSocket,
+  getRoomForSocket,
+  removeRoomForSocket,
   join,
   leave,
 }

@@ -9,6 +9,10 @@
 //   - value - Socket ID.
 let _userTable = {}
 
+// _socketIDToUser :: { [string]: string }
+// state. Keeps track of socketID-userID map.
+const _socketIDToUser = {}
+
 // -------------------------------------
 // Functions
 // -------------------------------------
@@ -39,6 +43,7 @@ function register(userID, socketID) {
   }
 
   _userTable[userID] = socketID
+  _socketIDToUser[socketID] = userID
 }
 
 // deregister :: string -> void
@@ -59,6 +64,8 @@ function deregisterBySocketID(socketID) {
       delete _userTable[key]
     }
   }
+
+  delete _socketIDToUser[socketID]
 }
 
 
@@ -80,6 +87,20 @@ function clear() {
   _userTable = {}
 }
 
+// getUserForSocket :: string -> string
+// effect. Given a socket-id, returns a user-id.
+// TODO: test
+function getUserForSocket(socketID) {
+  return _socketIDToUser[socketID]
+}
+
+// removeUserForSocket :: string -> string
+// effect. Given a socket-id, removes it from _socketIDToUser.
+// TODO: test
+function removeUserForSocket(socketID) {
+  delete _socketIDToUser[socketID]
+}
+
 module.exports = {
   getAll,
   getSocketID,
@@ -89,4 +110,6 @@ module.exports = {
   isRegistered,
   count,
   clear,
+  getUserForSocket,
+  removeUserForSocket,
 }

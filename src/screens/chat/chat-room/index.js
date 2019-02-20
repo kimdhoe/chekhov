@@ -54,8 +54,6 @@ class ChatRoom extends React.Component {
 
     const { socket, room, userID } = this.props
 
-    socket.on('invitation', console.log)
-
     socket.on('message', message => {
       this._isMounted && this.setState(
         state => ({ messages: [...state.messages, message] }),
