@@ -4,6 +4,7 @@ import Animated from 'animated/lib/targets/react-dom'
 
 import * as styles from './index.module.css'
 import Message from './message'
+import Editor from './editor'
 import Invite from './invite'
 import ArrowBackIcon from '../../../components/arrow-back-icon'
 import PlusIcon from '../../../components/plus-icon'
@@ -123,6 +124,23 @@ class ChatRoom extends React.Component {
     this.setState({ showUserList: false })
   }
 
+  handleSubmit2 = (text, image) => {
+    const { props } = this
+    const message = {
+      type: 'default',
+      sender: props.userID,
+      room: props.room.id,
+      text,
+      image,
+    }
+    this.setState(({ messages }) => ({
+      messages: [...messages, message],
+    }), () => {
+      props.socket.emit('message', message)
+      this.scrollToBottom()
+    })
+  }
+
   // handleSubmit :: Event -> void
   handleSubmit = e => {
     e.preventDefault()
@@ -232,7 +250,7 @@ class ChatRoom extends React.Component {
 
       <form
         className={styles.editorRight}
-        onSubmit={this.handleSubmit}
+        onSubmit={this.handleSubmit2}
       >
         {this.state.image && (
           <img
@@ -278,7 +296,10 @@ class ChatRoom extends React.Component {
       >
         {this.renderHeader()}
         {this.renderChat()}
-        {this.renderEditor()}
+        {/* {this.renderEditor()} */}
+        <Editor
+          onSubmit={this.handleSubmit2}
+        />
         {this.renderInviteModal()}
       </Animated.div>
     )

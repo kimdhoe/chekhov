@@ -1,0 +1,97 @@
+.editor {
+  margin: 0 auto;
+  padding: 10px 0;
+  max-width: 720px;
+  width: 95%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.editorLeft {
+  padding-right: 10px;
+  padding-bottom: 6px;
+}
+
+.editorRight {
+  width: 100%;
+  flex-direction: column;
+  border: 1px solid #adb5bd;
+  border-radius: 20px;
+}
+
+.field {
+  display: flex;
+  padding: 5px 11px 5px 0;
+  flex: 1;
+}
+
+.sendImageButton {
+  display: block;
+  padding: 0;
+  outline: none;
+  border: none;
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+  color: #495057;
+  cursor: pointer;
+}
+
+.file {
+  display: none;
+}
+
+.imageContainer {
+  display: inline-block;
+  position: relative;
+}
+
+.image {
+  margin-top: 10px;
+  margin-left: 10px;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 12px;
+}
+
+.removeImage {
+  position: absolute;
+  top: 15px;
+  right: 5px;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  border: none;
+  border-radius: 50%;
+  font-size: 22px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.input {
+  flex: 1;
+  outline: none;
+  padding: 0 10px;
+  border: none;
+  border-radius: 12px;
+}
+
+.input::placeholder {
+  color: #adb5bd;
+}
+
+.sendButton {
+  padding: 0;
+  outline: none;
+  border: none;
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+  color: #868e96;
+  cursor: pointer;
+}
