@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Animated from 'animated/lib/targets/react-dom'
 
 import * as styles from './index.module.css'
+import Message from './message'
 import Invite from './invite'
 import ArrowBackIcon from '../../../components/arrow-back-icon'
 import PlusIcon from '../../../components/plus-icon'
@@ -36,6 +38,8 @@ class ChatRoom extends React.Component {
 
   scrollContainer = React.createRef()
 
+  opacity = new Animated.Value(0)
+
   // state :: ChatRoomState
   state = {
     messages: [],
@@ -45,12 +49,12 @@ class ChatRoom extends React.Component {
   }
 
   componentDidMount() {
+    this._isMounted = true
+    this.fadeIn()
     const { socket, room, userID } = this.props
-
     socket.on('invitation', console.log)
-
     socket.on('message', message => {
-      this.setState(
+      this._isMounted && this.setState(
         state => ({ messages: [...state.messages, message] }),
         this.scrollToBottom,
       )
@@ -72,6 +76,7 @@ class ChatRoom extends React.Component {
   }
 
   componentWillUnmount() {
+    this._isMounted = false
     const { props } = this
 
     // leave :: LeaveRequest
@@ -81,6 +86,24 @@ class ChatRoom extends React.Component {
     }
 
     props.socket.emit('leave', leave)
+  }
+
+  // fadeIn :: -> void
+  // Reveals screen with animation.
+  fadeIn = () => {
+    Animated.timing(this.opacity, {
+      toValue: 1,
+      duration: 150,
+    }).start()
+  }
+
+  // fadeOut :: -> void
+  // Hides screen with animation and excutes fn.
+  fadeOut = fn => {
+    Animated.timing(this.opacity, {
+      toValue: 0,
+      duration: 150,
+    }).start(fn)
   }
 
   // scrollToBottom :: boolean -> void
@@ -157,7 +180,10 @@ class ChatRoom extends React.Component {
 
     this.setState({
       image: imageData.data,
-      imageDimensions: { width: imageData.width, height: imageData.height },
+      imageDimensions: {
+        width: imageData.width,
+        height: imageData.height,
+      },
     })
   }
 
@@ -170,7 +196,10 @@ class ChatRoom extends React.Component {
     const { messages, showUserList } = this.state
 
     return (
-      <div className={styles.container}>
+      <Animated.div
+        className={styles.container}
+        style={{ opacity: this.opacity }}
+      >
         <div
           className={styles.headerContainer}
           style={{ backgroundColor: room.color }}
@@ -178,7 +207,10 @@ class ChatRoom extends React.Component {
           <header className={styles.header}>
             <button
               className={styles.backButton}
-              onClick={onPressBack}
+              onClick={() => {
+                this.fadeOut(onPressBack)
+                // onPressBack()
+              }}
             >
               <ArrowBackIcon />
             </button>
@@ -228,7 +260,10 @@ class ChatRoom extends React.Component {
             </label>
           </div>
 
-          <form className={styles.editorRight} onSubmit={this.handleSubmit}>
+          <form
+            className={styles.editorRight}
+            onSubmit={this.handleSubmit}
+          >
             {this.state.image && (
               <img
                 alt=""
@@ -260,44 +295,9 @@ class ChatRoom extends React.Component {
           socket={this.props.socket}
           room={this.props.room}
         />
-      </div>
+      </Animated.div>
     )
   }
-}
-
-const Message = ({ message, mine = false }) => {
-  if (message.type === 'announcement') {
-    return (
-      <p className={styles.announcement}>
-        {message.text}
-      </p>
-    )
-  }
-
-  return (
-    <div className={[ styles.message, mine && styles.myMessage ].join(' ')}>
-      {!mine && (
-        <p className={styles.messageSender}>
-          {message.sender}
-        </p>
-      )}
-      {!!message.image && (
-        <p className={styles.attachment}>
-          <img className={styles.messageImage} src={message.image} alt="" />
-        </p>
-      )}
-      {message.text && (
-        <p className={styles.messageText}>
-          {message.text}
-        </p>
-      )}
-    </div>
-  )
-}
-
-Message.propTypes = {
-  message: PropTypes.object.isRequired,
-  mine: PropTypes.bool.isRequired,
 }
 
 export default ChatRoom

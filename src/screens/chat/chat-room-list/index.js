@@ -75,10 +75,10 @@ class ChatRoomList extends React.Component {
   // Reveals chat-room buttons with animation.
   enter = () => {
     stagger(
-      19,
+      17,
       this.opacities.map(anim => timing(anim, {
         toValue: 1,
-        duration: 400,
+        duration: 200,
       })),
     ).start()
   }
@@ -89,7 +89,7 @@ class ChatRoomList extends React.Component {
     parallel([
       timing(this.headerOpacity, { toValue: 0, duration: 200 }),
       stagger(11, this.opacities.map(
-        opacity => timing(opacity, { toValue: 0, duration: 300 })),
+        opacity => timing(opacity, { toValue: 0, duration: 200 })),
       ),
     ]).start(fn)
   }
