@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Animated from 'animated/lib/targets/react-dom'
 import ImageIcon from '../../../../components/image-icon'
 import SendIcon from '../../../../components/send-icon'
 import CloseIcon from '../../../../components/close-icon'
@@ -19,6 +18,10 @@ import * as styles from './index.module.css'
 
 
 class Editor extends React.Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  }
+
   textInputRef = React.createRef()
 
   // state :: EditorState
