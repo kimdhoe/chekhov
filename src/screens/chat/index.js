@@ -108,7 +108,7 @@ class Chat extends React.Component {
   }
 
   render() {
-    const { socket, userID } = this.props
+    const { socket, service, userID } = this.props
     const { room, invitation } = this.state
 
     return (
@@ -119,8 +119,8 @@ class Chat extends React.Component {
         {room
           ? (
             <ChatRoom
-              service={this.props.service}
               socket={socket}
+              service={service}
               userID={userID}
               room={room}
               onPressBack={this.goBack}
@@ -129,6 +129,7 @@ class Chat extends React.Component {
           : (
             <ChatRoomList
               socket={socket}
+              service={service}
               userID={userID}
               onPressRoom={this.joinRoom}
             />

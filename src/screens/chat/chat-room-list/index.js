@@ -41,34 +41,31 @@ class ChatRoomList extends React.Component {
     isPending: true,
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     timing(this.headerOpacity, {
       toValue: 1,
       duration: 300,
     }).start()
 
-    this.props.socket.emit(
-      'list',
-      // boolean * string * ChatRoom[] -> void
-      ({ ok, message, rooms }) => {
-        if (!ok) {
-          this.setState({ error: message })
-        } else {
-          rooms.forEach(room => {
-            const opacity = new Value(0)
-            this.opacities.push(opacity)
-            this.translateYs.push(opacity.interpolate({
-              inputRange: [0, 1],
-              outputRange: [15, 0],
-            }))
-          })
-          this.setState({
-            isPending: false,
-            rooms,
-          }, () => this.enter(rooms.length))
-        }
-      }
-    )
+    try {
+      const { rooms } = await this.props.service.fetchRooms()
+
+      rooms.forEach(room => {
+        const opacity = new Value(0)
+        this.opacities.push(opacity)
+        this.translateYs.push(opacity.interpolate({
+          inputRange: [0, 1],
+          outputRange: [15, 0],
+        }))
+      })
+
+      this.setState({
+        isPending: false,
+        rooms,
+      }, () => this.enter(rooms.length))
+    } catch (err) {
+      this.setState({ error: err.message })
+    }
   }
 
   // enter :: -> void

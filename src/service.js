@@ -26,6 +26,18 @@ function makeService(socket) {
 
     installInvitationHandler(f) {
       socket.on('invitation', f)
+    },
+
+    fetchRooms() {
+      return new Promise((resolve, reject) => {
+        socket.emit('list', ({ ok, message, rooms }) => {
+          if (ok) {
+            resolve({ rooms })
+          } else {
+            reject({ message })
+          }
+        })
+      })
     }
   }
 }
