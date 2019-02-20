@@ -47,6 +47,21 @@ function deregister(userID) {
   delete _userTable[userID]
 }
 
+// deregisterBySocketID :: string -> void
+// effect. Given a socket ID, deletes a user ID from _userTable.
+function deregisterBySocketID(socketID) {
+  const keys = Object.keys(_userTable)
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+
+    if (_userTable[key] === socketID) {
+      delete _userTable[key]
+    }
+  }
+}
+
+
 // isRegistered :: string -> boolean
 // effect. Is a given user-id exist on _userTable?
 function isRegistered(userID) {
@@ -70,6 +85,7 @@ module.exports = {
   getSocketID,
   register,
   deregister,
+  deregisterBySocketID,
   isRegistered,
   count,
   clear,

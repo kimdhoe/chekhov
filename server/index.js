@@ -27,7 +27,9 @@ const server = http.createServer(app)
 const io = socketIO(server)
 
 io.on('connection', socket => {
-  socket.on('disconnect', () => { })
+  socket.on('disconnect', () => {
+    User.deregisterBySocketID(socket.id)
+  })
 
   socket.on(
     'register',

@@ -7,7 +7,8 @@ afterEach(() => {
 describe('User', () => {
   test('registers user', () => {
     const id = 'abc'
-    User.register(id)
+    const socketID = '123'
+    User.register(id, socketID)
     expect(User.isRegistered(id)).toBe(true)
   })
 
@@ -18,9 +19,18 @@ describe('User', () => {
     expect(User.isRegistered(id)).toBe(false)
   })
 
+  test('deregisters user using a socket ID', () => {
+    const id = 'abc'
+    const socketID = '123'
+    User.register(id, socketID)
+    User.deregisterBySocketID(socketID)
+    expect(User.isRegistered(id)).toBe(false)
+  })
+
   test('checks if user is registered', () => {
     const id = 'abc'
-    User.register(id)
+    const socketID = '123'
+    User.register(id, socketID)
     expect(User.isRegistered(id)).toBe(true)
   })
 
