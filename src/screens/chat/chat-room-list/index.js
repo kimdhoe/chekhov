@@ -23,7 +23,7 @@ const AnimatedButton = createAnimatedComponent('button')
 
 class ChatRoomList extends React.Component {
   static propTypes = {
-    socket: PropTypes.object,
+    service: PropTypes.object.isRequired,
     onPressRoom: PropTypes.func.isRequired,
   }
 

@@ -128,7 +128,6 @@ class Chat extends React.Component {
           )
           : (
             <ChatRoomList
-              socket={socket}
               service={service}
               userID={userID}
               onPressRoom={this.joinRoom}
