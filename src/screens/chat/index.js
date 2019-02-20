@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Animated from 'animated/lib/targets/react-dom'
 
 import * as styles from './index.module.css'
@@ -21,6 +22,10 @@ import Invitation from './invitation'
 // -------------------------------------
 
 class Chat extends React.Component {
+  static propTypes = {
+    service: PropTypes.object.isRequired,
+  }
+
   opacity = new Animated.Value(1)
   invitationOpacity = new Animated.Value(0)
   invitationTranslateY = this.invitationOpacity.interpolate({
@@ -35,15 +40,10 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    const { socket, userID } = this.props
+    const { service, userID } = this.props
 
-    // Re-registers user when socket reconnects.
-    //   * This happens when server restarts.
-    socket.on('connect', () => {
-      socket.emit('register', userID, () => { })
-    })
-
-    socket.on('invitation', (senderID, room) => {
+    service.installReconnectionHandler(userID)
+    service.installInvitationHandler((senderID, room) => {
       this.showInvitation(senderID, room)
     })
   }

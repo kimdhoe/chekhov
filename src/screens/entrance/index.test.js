@@ -11,8 +11,6 @@ import {
 
 import Entrance from './index'
 
-jest.useFakeTimers()
-
 afterEach(cleanup)
 
 describe('Entrance', () => {
