@@ -1,39 +1,30 @@
 import React from 'react';
-import io from 'socket.io-client'
+import PropTypes from 'prop-types'
 
 import {
   Entrance,
   Chat,
 } from './screens'
-import { makeService } from './service'
 import * as styles from './app.module.css'
 
 // -------------------------------------
 // Data Definitions
 // -------------------------------------
 
-// An AppState is an object: { socket?: Socket
-//                           , userID?  string
-//                           }
-//   * userID - A unique identifier of a user
-//   * socket - socket.io-cilent Socket
+// An AppState is an object: { userID?  string }
 
 // -------------------------------------
 // Component
 // -------------------------------------
 
 class App extends React.Component {
-  // state :: AppState
-  state = {
-    service: null,
-    socket: null,
-    userID: null,
+  static propTypes = {
+    service: PropTypes.object.isRequired,
   }
 
-  componentDidMount() {
-    const socket = io(process.env.REACT_APP_ENDPOINT)
-    const service = makeService(socket)
-    this.setState({ socket, service })
+  // state :: AppState
+  state = {
+    userID: null,
   }
 
   // handleRegister :: string -> void
@@ -42,9 +33,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { service, socket, userID } = this.state
-
-    if (!socket) return null
+    const { service, socket } = this.props
+    const { userID } = this.state
 
     return (
       <div className={styles.container}>
@@ -59,7 +49,6 @@ class App extends React.Component {
           : (
             <Entrance
               service={service}
-              socket={socket}
               onRegister={this.handleRegister}
             />
           )

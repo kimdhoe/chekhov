@@ -9,7 +9,11 @@ function makeService(socket) {
 
     invite(senderID, receiverID, room, fn) {
       socket.emit('invitation', senderID, receiverID, room, fn)
-    }
+    },
+
+    register(userID, f) {
+      socket.emit('register', userID, f)
+    },
   }
 }
 

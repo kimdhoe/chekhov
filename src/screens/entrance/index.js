@@ -45,7 +45,7 @@ const APP_DESCRIPTION =
 
 class Entrance extends React.Component {
   static propTypes = {
-    socket: PropTypes.object.isRequired,
+    service: PropTypes.object.isRequired,
     onRegister: PropTypes.func.isRequired,
   }
 
@@ -112,21 +112,17 @@ class Entrance extends React.Component {
       return
     }
 
-    this.props.socket.emit(
-      'register',
-      userID,
-      // RegisterResponse -> void
-      ({ ok, message }) => {
-        if (!ok) {
-          this.setState({ error: message }, () => {
-            this.inputRef.current.focus()
-          })
-        } else {
-          this.exit(() => {
-            this.props.onRegister(userID)
-          })
-        }
-      })
+    this.props.service.register(userID, ({ ok, message }) => {
+      if (!ok) {
+        this.setState({ error: message }, () => {
+          this.inputRef.current.focus()
+        })
+      } else {
+        this.exit(() => {
+          this.props.onRegister(userID)
+        })
+      }
+    })
   }
 
   renderHeader = () => (

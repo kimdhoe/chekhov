@@ -18,7 +18,7 @@
     "start": "REACT_APP_ENDPOINT=http://localhost:3001 react-scripts start",
     "build": "REACT_APP_ENDPOINT=http://localhost:3001 react-scripts build",
     "build:deploy": "REACT_APP_ENDPOINT=https://chekhov-app.herokuapp.com react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --verbose",
     "test:server": "jest server/ --verbose",
     "eject": "react-scripts eject"
   },
@@ -32,7 +32,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "react-testing-library": "^5.9.0"
   },
   "engines": {
     "node": ">=11.8"
