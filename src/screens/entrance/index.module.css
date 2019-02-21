@@ -93,3 +93,7 @@
   background-color: #0F328D;
   color: white;
 }
+
+.button:disabled {
+  background-color: #304a8a;
+}

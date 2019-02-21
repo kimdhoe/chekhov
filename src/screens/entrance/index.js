@@ -62,6 +62,7 @@ class Entrance extends React.Component {
   state = {
     input: '',
     error: '',
+    isButtonDisabled: false,
   }
 
   componentDidMount() {
@@ -112,17 +113,23 @@ class Entrance extends React.Component {
       return
     }
 
-    this.props.service.register(userID, ({ ok, message }) => {
-      if (!ok) {
-        this.setState({ error: message }, () => {
-          this.inputRef.current.focus()
-        })
-      } else {
-        this.exit(() => {
-          this.props.onRegister(userID)
-        })
-      }
+    this.setState({ isButtonDisabled: true }, () => {
+      this.props.service.register(userID, ({ ok, message }) => {
+        if (!ok) {
+          this.setState({
+            error: message,
+            isButtonDisabled: false,
+          }, () => {
+            this.inputRef.current.focus()
+          })
+        } else {
+          this.exit(() => {
+            this.props.onRegister(userID)
+          })
+        }
+      })
     })
+
   }
 
   renderHeader = () => (
@@ -182,7 +189,11 @@ class Entrance extends React.Component {
 
       <p className={styles.error}>{this.state.error}</p>
 
-      <button type="submit" className={styles.button}>
+      <button
+        type="submit"
+        className={styles.button}
+        disabled={this.state.isButtonDisabled}
+      >
         Connect
       </button>
     </AnimatedForm>
