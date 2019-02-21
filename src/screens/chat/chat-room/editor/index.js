@@ -115,7 +115,7 @@ class Editor extends React.Component {
 
 // getImageData :: File -> Promise<{ data: string }>
 const getImageData = file => {
-  const max = 500
+  const max = 200
   return new Promise(resolve => {
     const reader = new FileReader()
     reader.onload = e => {
