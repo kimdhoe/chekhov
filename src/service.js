@@ -43,6 +43,7 @@ function makeService(socket) {
       socket.on('message', f)
     },
 
+    // joinRoom :: string * string -> void
     joinRoom(roomID, userID) {
       // Re-join room when socket reconnects.
       //   * This happens when server restarts.
@@ -52,10 +53,12 @@ function makeService(socket) {
       socket.emit('join', { roomID, userID })
     },
 
+    // leaveRoom :: string * string -> void
     leaveRoom(roomID, userID) {
       socket.emit('leave', { roomID, userID })
     },
 
+    // sendMessage :: string -> void
     sendMessage(message) {
       socket.emit('message', message)
     },

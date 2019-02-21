@@ -67,6 +67,7 @@ class Message extends React.Component {
         {!!message.image && (
           <p className={styles.attachment}>
             <img
+              data-testid="attachment"
               className={styles.messageImage}
               src={message.image}
               alt=""
