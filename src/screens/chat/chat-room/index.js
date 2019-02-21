@@ -122,7 +122,7 @@ class ChatRoom extends React.Component {
     this.setState({ showUserList: false })
   }
 
-  handleSubmit2 = (text, image) => {
+  handleSubmit = (text, image) => {
     const { props } = this
     const message = {
       type: 'default',
@@ -136,49 +136,6 @@ class ChatRoom extends React.Component {
     }), () => {
       props.socket.emit('message', message)
       this.scrollToBottom()
-    })
-  }
-
-  // handleSubmit :: Event -> void
-  handleSubmit = e => {
-    e.preventDefault()
-
-    const inputNode = e.target.message
-    const text = inputNode.value
-    const { props, state } = this
-
-    if (!text.trim() && !state.image) return
-
-    // message :: Message
-    const message = {
-      type: 'default',
-      sender: props.userID,
-      text: inputNode.value,
-      room: props.room.id,
-      image: state.image,
-    }
-
-    this.setState(({ messages }) => ({
-      messages: [...messages, message],
-      image: null,
-    }), () => {
-      props.socket.emit('message', message)
-      inputNode.value = ''
-      this.scrollToBottom()
-    })
-  }
-
-  handleFileChange = async e => {
-    e.persist()
-    const [file] = e.target.files
-
-    if (!file) return
-
-    const imageData = await getImageData(file)
-
-    this.setState({ image: imageData.data }, () => {
-      e.target.value = null
-      this.inputRef.current.focus()
     })
   }
 
@@ -229,50 +186,7 @@ class ChatRoom extends React.Component {
   )
 
   renderEditor = () => (
-    <div className={styles.editor}>
-      <div className={styles.editorLeft}>
-        <label
-          className={styles.sendImageButton}
-          htmlFor="file"
-        >
-          <input
-            className={styles.file}
-            id="file"
-            type="file"
-            accept="image/*"
-            onChange={this.handleFileChange}
-          />
-          <ImageIcon />
-        </label>
-      </div>
-
-      <form
-        className={styles.editorRight}
-        onSubmit={this.handleSubmit2}
-      >
-        {this.state.image && (
-          <img
-            alt=""
-            className={styles.imagePreview}
-            src={this.state.image}
-          />
-        )}
-        <div className={styles.field}>
-          <input
-            ref={this.inputRef}
-            className={styles.input}
-            autoFocus
-            autoComplete="off"
-            name="message"
-            type="text"
-            placeholder="Type here"
-          />
-          <button className={styles.sendButton} type="submit">
-            <SendIcon />
-          </button>
-        </div>
-      </form>
-    </div>
+    <Editor onSubmit={this.handleSubmit} />
   )
 
   renderInviteModal = () => (
@@ -294,32 +208,11 @@ class ChatRoom extends React.Component {
       >
         {this.renderHeader()}
         {this.renderChat()}
-        {/* {this.renderEditor()} */}
-        <Editor
-          onSubmit={this.handleSubmit2}
-        />
+        {this.renderEditor()}
         {this.renderInviteModal()}
       </Animated.div>
     )
   }
-}
-
-
-// getImageData :: File -> Promise<{ data: string }>
-const getImageData = file => {
-  return new Promise(resolve => {
-    const reader = new FileReader()
-    reader.onload = e => {
-      const img = new Image()
-      img.onload = () => {
-        resolve({
-          data: reader.result,
-        })
-      }
-      img.src = reader.result
-    }
-    reader.readAsDataURL(file)
-  })
 }
 
 export default ChatRoom

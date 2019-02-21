@@ -5,6 +5,7 @@ import SendIcon from '../../../../components/send-icon'
 import CloseIcon from '../../../../components/close-icon'
 
 import * as styles from './index.module.css'
+import { asap } from 'rsvp';
 
 // -------------------------------------
 // Data Definitions
@@ -114,14 +115,30 @@ class Editor extends React.Component {
 
 // getImageData :: File -> Promise<{ data: string }>
 const getImageData = file => {
+  const max = 500
   return new Promise(resolve => {
     const reader = new FileReader()
     reader.onload = e => {
       const img = new Image()
       img.onload = () => {
-        resolve({
-          data: reader.result,
-        })
+        let width = img.naturalWidth
+        let height = img.naturalHeight
+        if (width > max || height > max) {
+          if (width > height) {
+            height = height * (max / width)
+            width = max
+          } else {
+            width = width * (max / height)
+            height = max
+          }
+        }
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, width, height)
+        const data = ctx.canvas.toDataURL(img, file.type)
+        resolve({ data })
       }
       img.src = reader.result
     }
