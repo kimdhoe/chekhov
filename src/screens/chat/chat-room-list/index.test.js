@@ -1,19 +1,19 @@
 import React from 'react'
 import ChatRoomList from './index'
-import { render, cleanup, fireEvent } from 'react-testing-library'
+import { render, cleanup, waitForDomChange } from 'react-testing-library'
 
 afterEach(cleanup)
 
 describe('ChatRoomList', () => {
   it('shows greeting text', () => {
     const userID = 'a'
-    const socket = { emit: jest.fn() }
+    const service = {}
     const onPressRoom = jest.fn()
 
     const { container } = render(
       <ChatRoomList
         userID={userID}
-        socket={socket}
+        service={service}
         onPressRoom={onPressRoom}
       />
     )
@@ -25,14 +25,12 @@ describe('ChatRoomList', () => {
 
   it('calls service function to fetch rooms', () => {
     const userID = 'a'
-    const socket = { emit: jest.fn() }
     const service = { fetchRooms: jest.fn() }
     const onPressRoom = jest.fn()
 
-    const { container } = render(
+    render(
       <ChatRoomList
         userID={userID}
-        socket={socket}
         service={service}
         onPressRoom={onPressRoom}
       />
@@ -41,8 +39,28 @@ describe('ChatRoomList', () => {
     expect(service.fetchRooms).toHaveBeenCalled()
   })
 
-  // TODO
-  it('shows list of rooms', () => {
+  it('shows list of rooms', async () => {
+    const service = {
+      fetchRooms: jest.fn(() => Promise.resolve({
+        rooms: [
+          { id: 'a', title: 'Moon', color: 'black', participants: [] },
+          { id: 'b', title: 'Mercury', color: 'black', participants: [] },
+          { id: 'c', title: 'Mars', color: 'black', participants: [] },
+        ],
+      })),
+    }
+    const { container } = render(
+      <ChatRoomList
+        userID={'user'}
+        service={service}
+        onPressRoom={() => { }}
+      />
+    )
 
+    await waitForDomChange({ container })
+
+    expect(container.textContent).toMatch('Moon')
+    expect(container.textContent).toMatch('Mercury')
+    expect(container.textContent).toMatch('Mars')
   })
 })
