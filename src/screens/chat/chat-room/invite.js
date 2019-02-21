@@ -19,7 +19,6 @@ const ANIM_DURATION = 150
 // An InviteState is an object: { show:      boolean
 //                              , isPending: boolean
 //                              , users:     string[]
-//                              , invitee:   string
 //                              }
 
 // -------------------------------------
@@ -41,7 +40,6 @@ class Invite extends React.Component {
     show: false,
     isPending: true,
     users: [],
-    invitee: null,
   }
 
   async componentDidUpdate(prevProps) {
@@ -66,18 +64,20 @@ class Invite extends React.Component {
 
   show = async () => {
     const { props } = this
-    const users = await props.service.fetchAllUsers()
 
     this.setState({
       show: true,
-      isPending: false,
-      users: users.filter(id => id !== props.userID),
-    }, () => {
+    }, async () => {
       Animated.timing(this.opacity, {
         toValue: 1,
         duration: ANIM_DURATION,
       }).start(() => {
         window.addEventListener('click', this.handleWindowClick)
+      })
+      const users = await props.service.fetchAllUsers()
+      this.setState({
+        isPending: false,
+        users: users.filter(id => id !== props.userID),
       })
     })
   }
