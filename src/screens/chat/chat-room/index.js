@@ -8,8 +8,6 @@ import Editor from './editor'
 import Invite from './invite'
 import ArrowBackIcon from '../../../components/arrow-back-icon'
 import PlusIcon from '../../../components/plus-icon'
-import ImageIcon from '../../../components/image-icon'
-import SendIcon from '../../../components/send-icon'
 
 // -------------------------------------
 // Data Definitions
@@ -32,7 +30,6 @@ class ChatRoom extends React.Component {
       title: PropTypes.string.isRequired,
       color: PropTypes.string.isRequired,
     }),
-    socket: PropTypes.object.isRequired,
     onPressBack: PropTypes.func.isRequired,
   }
 
@@ -143,6 +140,7 @@ class ChatRoom extends React.Component {
         <h2 className={styles.titleText}>{this.props.room.title}</h2>
 
         <button
+          data-testid="plusButton"
           className={styles.inviteButton}
           onClick={this.handleInvitePress}
         >
@@ -179,7 +177,6 @@ class ChatRoom extends React.Component {
       close={this.hideInviteModal}
       service={this.props.service}
       userID={this.props.userID}
-      socket={this.props.socket}
       room={this.props.room}
     />
   )

@@ -76,7 +76,7 @@ class Editor extends React.Component {
           </label>
         </div>
 
-        <form className={styles.editorRight} onSubmit={this.handleSubmit}>
+        <form data-testid="editorForm" className={styles.editorRight} onSubmit={this.handleSubmit}>
           {this.state.image && (
             <div className={styles.imageContainer}>
               <img
@@ -103,7 +103,7 @@ class Editor extends React.Component {
               type="text"
               placeholder="Type here"
             />
-            <button className={styles.sendButton} type="submit">
+            <button data-testid="sendButton" className={styles.sendButton} type="submit">
               <SendIcon />
             </button>
           </div>
