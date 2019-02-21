@@ -9,6 +9,7 @@ const { makeControllers } = require('./controllers')
 // -------------------------------------
 
 // PORT :: number
+//   * process.env.PORT is for Heroku deployment, not for development.
 const PORT = process.env.PORT || 3001
 
 // -------------------------------------
