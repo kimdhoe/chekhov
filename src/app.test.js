@@ -6,7 +6,7 @@ import App from './app'
 
 afterEach(cleanup)
 
-describe('App', () => {
+describe('<App />', () => {
   it('renders without crashing', () => {
     const div = document.createElement('div')
     ReactDOM.render(

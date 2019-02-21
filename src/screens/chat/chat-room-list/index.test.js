@@ -4,7 +4,7 @@ import { render, cleanup, waitForDomChange } from 'react-testing-library'
 
 afterEach(cleanup)
 
-describe('ChatRoomList', () => {
+describe('<ChatRoomList />', () => {
   it('shows greeting text', () => {
     const userID = 'a'
     const service = {}

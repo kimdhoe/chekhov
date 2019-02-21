@@ -1,11 +1,8 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import {
   render,
   cleanup,
   fireEvent,
-  wait,
-  waitForDomChange,
   waitForElement,
 } from 'react-testing-library'
 
@@ -13,7 +10,7 @@ import Entrance from './index'
 
 afterEach(cleanup)
 
-describe('Entrance', () => {
+describe('<Entrance />', () => {
   it('calls onSubmit with the user ID', () => {
     const USER_ID = 'kdh'
     const fakeService = {

@@ -1,10 +1,10 @@
 import React from 'react'
 import Chat from './index'
-import { render, cleanup, fireEvent } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 
 afterEach(cleanup)
 
-describe('Chat', () => {
+describe('<Chat />', () => {
   it('renders without crashing', () => {
     const userID = 'kdh'
     const fakeService = {
