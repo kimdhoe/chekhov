@@ -12,9 +12,7 @@ function makeService(socket) {
     },
 
     register(userID, f) {
-      socket.emit('register', userID, f)
-    },
-
+      socket.emit('register', userID, f) },
     // installReconnectionHandler :: string -> void
     // Re-registers user when socket reconnects.
     //   * This happens when server restarts.
@@ -38,7 +36,29 @@ function makeService(socket) {
           }
         })
       })
-    }
+    },
+
+    // installMessageHandler :: (Message -> void) -> void
+    installMessageHandler(f) {
+      socket.on('message', f)
+    },
+
+    joinRoom(roomID, userID) {
+      // Re-join room when socket reconnects.
+      //   * This happens when server restarts.
+      socket.on('connect', () => {
+        socket.emit('join', { roomID, userID })
+      })
+      socket.emit('join', { roomID, userID })
+    },
+
+    leaveRoom(roomID, userID) {
+      socket.emit('leave', { roomID, userID })
+    },
+
+    sendMessage(message) {
+      socket.emit('message', message)
+    },
   }
 }
 

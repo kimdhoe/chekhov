@@ -52,41 +52,25 @@ class ChatRoom extends React.Component {
     this._isMounted = true
     this.fadeIn()
 
-    const { socket, room, userID } = this.props
+    const { service, room, userID } = this.props
 
-    socket.on('message', message => {
+    service.installMessageHandler(message => {
       this._isMounted && this.setState(
-        state => ({ messages: [...state.messages, message] }),
+        state => ({
+          messages: [...state.messages, message],
+        }),
         this.scrollToBottom,
       )
     })
 
-    // join :: JoinRequest
-    const join = {
-      roomID: room.id,
-      userID,
-    }
-
-    // Re-join room when socket reconnects.
-    //   * This happens when server restarts.
-    socket.on('connect', () => {
-      socket.emit('join', join)
-    })
-
-    socket.emit('join', join)
+    service.joinRoom(room.id, userID)
   }
 
   componentWillUnmount() {
     this._isMounted = false
     const { props } = this
 
-    // leave :: LeaveRequest
-    const leave = {
-      roomID: props.room.id,
-      userID: props.userID,
-    }
-
-    props.socket.emit('leave', leave)
+    props.service.leaveRoom(props.room.id, props.userID)
   }
 
   // fadeIn :: -> void
@@ -134,7 +118,7 @@ class ChatRoom extends React.Component {
     this.setState(({ messages }) => ({
       messages: [...messages, message],
     }), () => {
-      props.socket.emit('message', message)
+      props.service.sendMessage(message)
       this.scrollToBottom()
     })
   }
